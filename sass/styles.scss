@@ -5,10 +5,10 @@ $page-max-width: 600px;
 $page-min-height: 400px;
 $page-max-height: 800px;
 
-* {
+/* * {
   display: block;
   position: relative;
-}
+} */
 
 head {
   display: none;
@@ -169,6 +169,11 @@ div {
     margin: 10px auto;
     padding: 10px;
   }
+}
+
+label, span, input {
+  display: block;
+  position: relative;
 }
 
 label {

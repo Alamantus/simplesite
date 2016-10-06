@@ -1,5 +1,6 @@
 window.adminpw = 'test';
 var nextPageIndex = 0;
+var nextNewsIndex = 0;
 
 $(document).ready(function() {
 
@@ -32,15 +33,29 @@ $(document).ready(function() {
     // End of global content
     htmlContent += '</div>';
 
-    htmlContent += '<div><h2 class="content-title">Content <span id="togglePages" class="toggle-button">collapse</span></h2><div id="pages">';
+    htmlContent += '<div><h2 class="content-title">Pages/Links <span id="togglePages" class="toggle-button">collapse</span></h2><div id="pages">';
 
-    for (var i = 0; i < data.pages.length; i++) {
-      htmlContent += buildPageEntry(i, data.pages[i].title, data.pages[i].text, data.pages[i].type);
+    for (var p = 0; p < data.pages.length; p++) {
+      htmlContent += buildPageEntry(p, data.pages[p].title, data.pages[p].text, data.pages[p].type);
       nextPageIndex++;
     }
 
     // End of pages
-    htmlContent += '</div></div>';
+    htmlContent += '</div>\
+      <button id="newPageButton">Add Page/Link</button>\
+    </div>';
+
+    htmlContent += '<div><h2 class="content-title">News <span id="toggleNews" class="toggle-button">collapse</span></h2><div id="news">';
+
+    for (var n = 0; n < data.news.length; n++) {
+      htmlContent += buildNewsEntry(n, data.news[n].title, data.news[n].text, moment(data.news[n].published).format('h:mm:ssa D/M/YYYY'));
+      nextNewsIndex++;
+    }
+
+    // End of News
+    htmlContent += '</div>\
+      <button id="newNewsButton">Add News</button>\
+    </div>';
 
     $('#admin').html(htmlContent);
 
@@ -77,29 +92,23 @@ $(document).ready(function() {
     });
 
     $('#toggleGlobalContent').click(function() {
-      var button = this;
-      $('#globalContent').slideToggle(function () {
-        if ($(this).is(':visible')) {
-          $(button).text('collapse');
-        } else {
-          $(button).text('expand');
-        }
-      });
+      toggleSectionVisibility(this, '#globalContent');
     });
 
     $('#togglePages').click(function() {
-      var button = this;
-      $('#pages').slideToggle(function () {
-        if ($(this).is(':visible')) {
-          $(button).text('collapse');
-        } else {
-          $(button).text('expand');
-        }
-      });
+      toggleSectionVisibility(this, '#pages');
+    });
+
+    $('#toggleNews').click(function() {
+      toggleSectionVisibility(this, '#news');
     });
 
     $('#newPageButton').click(function() {
       addNewPage();
+    });
+
+    $('#newNewsButton').click(function() {
+      addNewNews();
     });
 
     $('#saveChanges').click(function() {
@@ -115,6 +124,17 @@ $(document).ready(function() {
     });
   });
 });
+
+function toggleSectionVisibility(buttonReference, contentId) {
+  var button = buttonReference;
+  $(contentId).slideToggle(function () {
+    if ($(buttonReference).is(':visible')) {
+      $(button).text('collapse');
+    } else {
+      $(button).text('expand');
+    }
+  });
+}
 
 function convertTextAreas(selector) {
   tinymce.init({
@@ -166,10 +186,33 @@ function buildPageEntry(index, title, text, type) {
   return result;
 }
 
+function addNewPage() {
+  var newPageIndex = nextPageIndex++;
+
+  $('#pages').append(buildPageEntry(newPageIndex, 'New Page', 'New Page Content'));
+
+  convertTextAreas('#page' + newPageIndex.toString() + 'Text');
+
+  // Add Listeners
+  $('#page #' + newPageIndex.toString()).click(function() {
+    deletePage(this.id);
+  });
+
+  $('#page' + newPageIndex.toString() + 'Type').change(function() {
+    toggleTypeForm(this);
+  });
+}
+
+function deletePage(pageIndex) {
+  if (confirm('Do you really want to delete page "' + $('#page' + pageIndex + 'Title').val() + '"?\nIf you click "OK", it will be deleted forever, and there is no way to restore it!')) {
+    var idToDelete = 'page' + pageIndex;
+
+    $('#' + idToDelete).remove();
+  }
+}
+
 function buildNewsEntry(index, title, text, date) {
   var result = '<div id="news' + index.toString() + '" class="content-area">';
-
-    result += '<span class="sort-handle left ui-icon ui-icon-arrowthick-2-n-s"></span>'
 
     result += '<button id="' + index.toString() + '" class="delete-button">Delete</button>'
       
@@ -187,8 +230,8 @@ function buildNewsEntry(index, title, text, date) {
       
     result += '<label>\
         <span id="news' + index.toString() + 'TitleLabel">Publish Date</span>\
-        <small>Set a date in the future to postpone publishing until that date/time!</small>\
-        <input type="text" id="news' + index.toString() + 'Published" class="news-published" value="' + date + '" />\
+        <small>Please use "h:mm:ssa D/M/YYYY" format, i.e. "8:24:00pm 6/10/2016". Set a date in the future to postpone publishing until that date/time!</small>\
+        <input type="text" id="news' + index.toString() + 'Published" value="' + date + '" />\
       </label>';
 
   // End of content-area
@@ -197,26 +240,22 @@ function buildNewsEntry(index, title, text, date) {
   return result;
 }
 
-function addNewPage() {
-  var newPageIndex = nextPageIndex++;
+function addNewNews() {
+  var newNewsIndex = nextNewsIndex++;
 
-  $('#pages').append(buildPageEntry(newPageIndex, 'New Page', 'New Page Content'));
+  $('#news').append(buildNewsEntry(newNewsIndex, 'New News', 'New News Content', moment().format('h:mm:ssa D/M/YYYY')));
 
-  convertTextAreas('#page' + newPageIndex.toString() + 'Text');
+  convertTextAreas('#news' + newNewsIndex + 'Text');
 
   // Add Listeners
-  $('button#' + newPageIndex.toString()).click(function() {
-    deletePage(this.id);
-  });
-
-  $('#page' + newPageIndex.toString() + 'Type').change(function() {
-    toggleTypeForm(this);
+  $('#news #' + newNewsIndex).click(function() {
+    deleteNews(this.id);
   });
 }
 
-function deletePage(pageIndex) {
-  if (confirm('Do you really want to delete page "' + $('#page' + pageIndex + 'Title').val() + '"?\nIf you click "OK", it will be deleted forever, and there is no way to restore it!')) {
-    var idToDelete = 'page' + pageIndex;
+function deleteNews(newsIndex) {
+  if (confirm('Do you really want to delete news "' + $('#news' + newsIndex + 'Title').val() + '"?\nIf you click "OK", it will be deleted forever, and there is no way to restore it!')) {
+    var idToDelete = 'news' + newsIndex;
 
     $('#' + idToDelete).remove();
   }
@@ -243,7 +282,8 @@ function saveSiteData() {
     var newSiteData = {
       siteTitle: $('#siteTitle').val(),
       siteTagline: $('#siteTagline').val(),
-      pages: []
+      pages: [],
+      news: []
     }
 
     var pageEntries = $('#pages').children('.content-area');
@@ -252,7 +292,7 @@ function saveSiteData() {
       var pageId = pageEntries[i].id;
       var type = $('#' + pageId + 'Type').val();
       var text;
-      console.log(pageId + 'Text');
+
       if (type !== 'link') {
         text = escapeHtml($('#' + pageId + 'Text').tinymce().getContent());
       } else {
@@ -265,6 +305,23 @@ function saveSiteData() {
         text: text
       });
     }
+
+    var newsEntries = $('#news').children('.content-area');
+
+    for (var i = 0; i < newsEntries.length; i++) {
+      var newsId = newsEntries[i].id;
+      var text = escapeHtml($('#' + newsId + 'Text').tinymce().getContent());
+      var published = $('#' + newsId + 'Published').val();
+
+      newSiteData.news.push({
+        title: $('#' + newsId + 'Title').val(),
+        text: text,
+        published: moment(published, 'h:mm:ssa D/M/YYYY').valueOf()
+      });
+    }
+
+    // Sort the news by date, descending.
+    newSiteData.news.sort(dynamicSort(['-published']));
 
     // Debug for no PHP server
     // console.log(JSON.stringify(newSiteData));

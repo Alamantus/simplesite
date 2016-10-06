@@ -7,10 +7,10 @@
 .left {
   float: left; }
 
-* {
+/* * {
   display: block;
-  position: relative; }
-
+  position: relative;
+} */
 head {
   display: none; }
 
@@ -123,6 +123,10 @@ div {
     background: #dedede;
     margin: 10px auto;
     padding: 10px; }
+
+label, span, input {
+  display: block;
+  position: relative; }
 
 label {
   margin-top: 10px;

@@ -15,7 +15,7 @@ $login_required = (!$pw || !$pw_correct);
 
   <!-- jQuery UI CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css" />
-  
+
   <!-- jQuery DateTimePicker CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/jquery.datetimepicker.min.css" />
 
@@ -66,7 +66,6 @@ if ($login_required) {
   <h3>Hi, <?php echo $_POST['login_name']; ?>!</h3>
 
   <div id="admin"></div>
-  <button id="newPageButton">Add Page/Link</button>
 
   <button id="saveChanges" class="right">Save Everything</button>
   
@@ -74,7 +73,7 @@ if ($login_required) {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment-with-locales.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.4.3/tinymce.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.4.3/jquery.tinymce.min.js"></script>
 
