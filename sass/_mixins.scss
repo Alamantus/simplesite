@@ -1,0 +1,15 @@
+@mixin center-block($margin) {
+  margin: $margin auto;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.right {
+  float: right;
+}
+
+.left {
+  float: left;
+}
