@@ -1,0 +1,54 @@
+* {
+  display: block;
+  position: relative; }
+
+body {
+  padding: 10px 0; }
+
+.clickable, .toggle-button {
+  cursor: pointer; }
+
+.right, .toggle-button, .delete-button {
+  float: right; }
+
+.left {
+  float: left; }
+
+.toggle-button {
+  font-weight: normal !important;
+  font-size: 0.5em; }
+
+.notification-box {
+  position: fixed;
+  z-index: 10;
+  right: 10px;
+  width: 200px; }
+  .notification-box .notification-box-content {
+    background: #88dd88;
+    position: relative;
+    padding: 10px; }
+
+div {
+  margin: 20px auto; }
+  div h2, div .content-area {
+    width: 70%;
+    min-width: 300px;
+    max-width: 800px; }
+  div h2 {
+    margin: 20px auto 5px; }
+  div .content-area {
+    background: #dedede;
+    margin: 10px auto;
+    padding: 10px; }
+
+label {
+  margin-top: 10px;
+  width: 50%; }
+  label span {
+    font-weight: bold; }
+
+.page-url {
+  width: 90%; }
+
+.sort-handle {
+  cursor: move; }

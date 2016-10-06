@@ -1,0 +1,86 @@
+* {
+  display: block;
+  position: relative;
+}
+
+body {
+  padding: 10px 0;
+}
+
+@mixin center-block($margin) {
+  margin: $margin auto;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.right {
+  float: right;
+}
+
+.left {
+  float: left;
+}
+
+.toggle-button {
+  @extend .clickable;
+  @extend .right;
+
+  font-weight: normal !important;
+  font-size: 0.5em;
+}
+
+.notification-box {
+  position: fixed;
+  z-index: 10;
+  right: 10px;
+  width: 200px;
+
+  .notification-box-content {
+    background: #88dd88;
+    position: relative;
+    padding: 10px;
+  }
+}
+
+div {
+  margin: 20px auto;
+
+  h2, .content-area {
+    width: 70%;
+    min-width: 300px;
+    max-width: 800px;
+  }
+
+  h2 {
+    margin: 20px auto 5px;
+  }
+
+  .content-area {
+    background: #dedede;
+    margin: 10px auto;
+    padding: 10px;
+  }
+}
+
+label {
+  margin-top: 10px;
+  width: 50%;
+
+  span {
+    font-weight: bold;
+  }
+}
+
+.page-url {
+  width: 90%;
+}
+
+.delete-button {
+  @extend .right;
+}
+
+.sort-handle {
+  cursor: move;
+}
