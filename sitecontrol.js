@@ -1,6 +1,6 @@
 $(document).ready(function() {
   // Get site data and process it.
-  $.getJSON('sitedata.json', function(data) {
+  $.getJSON('sitedata.json?nocache=' + moment().valueOf().toString(), function(data) {
     var htmlContent = '<div class="container">';
 
       htmlContent += '<div class="header"><a href="./">\
@@ -31,13 +31,30 @@ $(document).ready(function() {
 
           for (var i = 0; i < data.news.length; i++) {
             if (moment().valueOf() > data.news[i].published) {
-              htmlContent += buildnewsContent(i, data.news[i].title, data.news[i].text, data.news[i].published);
+              htmlContent += buildNewsContent(i, data.news[i].title, data.news[i].text, data.news[i].published);
             }
           }
 
           htmlContent += '</ul>';
 
-        // End of menu-bar
+        // End of news-bar
+        htmlContent += '</div>';
+
+        htmlContent += '<div class="footer">';
+
+          htmlContent += '<div class="left-box">';
+
+            htmlContent += '<span>something goes here</span>';
+
+          htmlContent += '</div>';
+
+          htmlContent += '<div class="right-box">';
+
+            htmlContent += '<span>and here</span>';
+
+          htmlContent += '</div>';
+
+        // End of footer
         htmlContent += '</div>';
         
 
@@ -56,7 +73,7 @@ $(document).ready(function() {
 
     // Set Up Listeners
     $('.menu-item').click(function() {
-      $('#' + this.id.replace('Link', 'Page').fadeIn();
+      $('#' + this.id.replace('Link', 'Page')).fadeIn();
     });
 
     $('.close-page-button').click(function() {
