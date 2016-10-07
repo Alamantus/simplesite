@@ -8,8 +8,8 @@ $(document).ready(function() {
   $('#notifications').hide();
 
   // Get site data and process it.
-  $.getJSON('sitedata.json', function(data) {
-    var htmlContent = '<div><h2 class="content-title">General Site Data <span id="toggleGlobalContent" class="toggle-button">collapse</span></h2>';
+  $.getJSON('sitedata.json?nocache=' + moment().valueOf().toString(), function(data) {
+    var htmlContent = '<div class="content-container"><h2 class="content-title">General Site Data <span id="toggleGlobalContent" class="toggle-button">collapse</span></h2>';
 
       htmlContent += '<div id="globalContent" class="content-area">';
 
@@ -20,6 +20,30 @@ $(document).ready(function() {
         htmlContent += '<label><span>Website Tagline</span>\
           <input type="text" id="siteTagline" value="' + data.siteTagline + '" />\
         </label>';
+          
+        htmlContent += '<label>\
+            <span id="footerLeftTitleLabel">Left Footer Title</span>\
+            <input type="text" id="footerLeftTitle" class="footer-title" value="' + data.footerLeft.title + '" />\
+          </label>';
+
+        htmlContent += '<div id="footerLeftTextContainer">\
+            <label>\
+              <span>Left Footer Text</span>\
+            </label>\
+            <textarea id="footerLeftText" class="footer-text">' + data.footerLeft.text + '</textarea>\
+          </div>';
+          
+        htmlContent += '<label>\
+            <span id="footerRightTitleLabel">Right Footer Title</span>\
+            <input type="text" id="footerRightTitle" class="footer-title" value="' + data.footerRight.title + '" />\
+          </label>';
+
+        htmlContent += '<div id="footerRightTextContainer">\
+            <label>\
+              <span>Right Footer Text</span>\
+            </label>\
+            <textarea id="footerRightText" class="footer-text">' + data.footerRight.text + '</textarea>\
+          </div>';
 
         // FIXME: Add website image upload when I feel like it.
         /*htmlContent += '<label><span>Website Image</span>\
@@ -33,7 +57,11 @@ $(document).ready(function() {
     // End of global content
     htmlContent += '</div>';
 
-    htmlContent += '<div><h2 class="content-title">Pages/Links <span id="togglePages" class="toggle-button">collapse</span></h2><div id="pages">';
+    htmlContent += '<div class="content-container"><h2 class="content-title">Pages/Links <span id="togglePages" class="toggle-button">collapse</span></h2>';
+
+      htmlContent += '<button id="newPageButton">Add Page/Link</button>';
+
+      htmlContent += '<div id="pages">';
 
     for (var p = 0; p < data.pages.length; p++) {
       htmlContent += buildPageEntry(p, data.pages[p].title, data.pages[p].text, data.pages[p].type);
@@ -42,10 +70,13 @@ $(document).ready(function() {
 
     // End of pages
     htmlContent += '</div>\
-      <button id="newPageButton">Add Page/Link</button>\
     </div>';
 
-    htmlContent += '<div><h2 class="content-title">News <span id="toggleNews" class="toggle-button">collapse</span></h2><div id="news">';
+    htmlContent += '<div class="content-container"><h2 class="content-title">News <span id="toggleNews" class="toggle-button">collapse</span></h2>';
+
+      htmlContent += '<button id="newNewsButton">Add News</button>';
+
+      htmlContent += '<div id="news">';
 
     for (var n = 0; n < data.news.length; n++) {
       htmlContent += buildNewsEntry(n, data.news[n].title, data.news[n].text, moment(data.news[n].published).format('h:mm:ssa D/M/YYYY'));
@@ -54,7 +85,6 @@ $(document).ready(function() {
 
     // End of News
     htmlContent += '</div>\
-      <button id="newNewsButton">Add News</button>\
     </div>';
 
     $('#admin').html(htmlContent);
@@ -69,15 +99,14 @@ $(document).ready(function() {
         top: 0,
         left: 0
       },
-      tolerance: 'pointer',
       opacity: 0.5,
-      start: function () {
+      start: function (event) {
         $('.wysiwyg').each(function () {
           // tinymce bugs out while dragging, so disable it while dragging
           tinymce.execCommand('mceRemoveEditor', false, this.id);
         });
       },
-      stop: function () {
+      stop: function (event) {
         $('.wysiwyg').each(function () {
           // tinymce bugs out while dragging, so re-enable it after dragging
           tinymce.execCommand('mceAddEditor', false, this.id);
@@ -115,8 +144,12 @@ $(document).ready(function() {
       saveSiteData();
     });
 
-    $('button.delete-button').click(function() {
+    $('.delete-page-button').click(function() {
       deletePage(this.id);
+    });
+
+    $('.delete-news-button').click(function() {
+      deleteNews(this.id);
     });
 
     $('.page-type').change(function () {
@@ -139,21 +172,22 @@ function toggleSectionVisibility(buttonReference, contentId) {
 function convertTextAreas(selector) {
   tinymce.init({
     selector: selector,
-    plugins: 'link code',
+    plugins: 'link code image',
     menubar: false,
     toolbar: [
-      'undo redo removeformat | formatselect | bold italic underline strikethrough subscript superscript | alignleft aligncenter alignright | bullist numlist | outdent indent blockquote | link code',
+      'undo redo removeformat | formatselect | bold italic underline strikethrough subscript superscript | alignleft aligncenter alignright | bullist numlist | outdent indent blockquote | link image code',
       'fontselect fontsizeselect'
-    ]
+    ],
+    image_dimensions: false
   });
 }
 
 function buildPageEntry(index, title, text, type) {
   var result = '<div id="page' + index.toString() + '" class="content-area">';
 
-    result += '<span class="sort-handle left ui-icon ui-icon-arrowthick-2-n-s"></span>'
+    result += '<span id="page' + index.toString() + 'SortHandle" class="sort-handle left ui-icon ui-icon-arrowthick-2-n-s"></span>'
 
-    result += '<button id="' + index.toString() + '" class="delete-button">Delete</button>'
+    result += '<button id="' + index.toString() + '" class="delete-page-button">Delete</button>'
       
     result += '<label>\
         <span>Type</span>\
@@ -189,7 +223,7 @@ function buildPageEntry(index, title, text, type) {
 function addNewPage() {
   var newPageIndex = nextPageIndex++;
 
-  $('#pages').append(buildPageEntry(newPageIndex, 'New Page', 'New Page Content'));
+  $('#pages').prepend(buildPageEntry(newPageIndex, 'New Page', 'New Page Content'));
 
   convertTextAreas('#page' + newPageIndex.toString() + 'Text');
 
@@ -214,7 +248,7 @@ function deletePage(pageIndex) {
 function buildNewsEntry(index, title, text, date) {
   var result = '<div id="news' + index.toString() + '" class="content-area">';
 
-    result += '<button id="' + index.toString() + '" class="delete-button">Delete</button>'
+    result += '<button id="' + index.toString() + '" class="delete-news-button">Delete</button>'
       
     result += '<label>\
         <span id="news' + index.toString() + 'TitleLabel">News Title</span>\
@@ -228,9 +262,9 @@ function buildNewsEntry(index, title, text, date) {
         <textarea id="news' + index.toString() + 'Text" class="news-text">' + text + '</textarea>\
       </div>';
       
-    result += '<label>\
+    result += '<label class="full-width">\
         <span id="news' + index.toString() + 'TitleLabel">Publish Date</span>\
-        <small>Please use "h:mm:ssa D/M/YYYY" format, i.e. "8:24:00pm 6/10/2016". Set a date in the future to postpone publishing until that date/time!</small>\
+        <small>Please use "h:mm:ssa D/M/YYYY" format, i.e. "8:24:00pm 6/10/2016".<br />Set a date in the future to postpone publishing until that date/time!</small>\
         <input type="text" id="news' + index.toString() + 'Published" value="' + date + '" />\
       </label>';
 
@@ -243,7 +277,7 @@ function buildNewsEntry(index, title, text, date) {
 function addNewNews() {
   var newNewsIndex = nextNewsIndex++;
 
-  $('#news').append(buildNewsEntry(newNewsIndex, 'New News', 'New News Content', moment().format('h:mm:ssa D/M/YYYY')));
+  $('#news').prepend(buildNewsEntry(newNewsIndex, 'New News', '', moment().format('h:mm:ssa D/M/YYYY')));
 
   convertTextAreas('#news' + newNewsIndex + 'Text');
 
@@ -282,6 +316,14 @@ function saveSiteData() {
     var newSiteData = {
       siteTitle: $('#siteTitle').val(),
       siteTagline: $('#siteTagline').val(),
+      footerLeft: {
+        title: $('#footerLeftTitle').val(),
+        text: escapeHtml($('#footerLeftText').tinymce().getContent())
+      },
+      footerRight: {
+        title: $('#footerRightTitle').val(),
+        text: escapeHtml($('#footerRightText').tinymce().getContent())
+      },
       pages: [],
       news: []
     }
@@ -329,7 +371,9 @@ function saveSiteData() {
 
     // Uncomment below once on PHP server.
     $.post('savesitedata.php', {pw: window.adminpw, sitedata: JSON.stringify(newSiteData)}, function (data) {
-      showNotification(data);
+      var linkToPage = ((data.indexOf('success') > -1) ? '<br /><a href="./" target="_blank">Go to Site</a>' : '');
+
+      showNotification(data + linkToPage);
     });
   }
 }

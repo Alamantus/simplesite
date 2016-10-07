@@ -4,7 +4,7 @@ $page-min-width: 300px;
 $page-max-width: 600px;
 $page-min-height: 400px;
 $page-max-height: 800px;
-$sidebar-padding: 5px;
+$general-padding: 10px;
 
 /* * {
   display: block;
@@ -17,7 +17,7 @@ head {
 
 body {
   background: white;
-  padding: 10px 0;
+  padding: $general-padding 0;
 }
 
 #site, .page-container {
@@ -81,69 +81,91 @@ body {
       position: absolute;
       top: 0;
       margin: 0;
-      border-bottom: 3px solid black;
+      border: 0;
       padding: 0;
-      height: 75%;
-      overflow-y: auto;
+      height: 80%;
     }
 
     .menu-bar {
       left: 0;
       width: 35%;
-      border-right: 3px solid black;
+      border: 0;
+      overflow-y: auto;
 
-      ul {
-        list-style: none;
-        margin: 0;
-        padding: 5px;
+      .menu-bar-contents {
+        position: relative;
+        height: 100%;
 
-        li {
-          @extend .clickable;
-          color: black;
-          text-decoration: underline;
-          font-size: 0.8em;
+        ul {
+          list-style: none;
+          margin: 0;
+          padding: 5px;
+
+          li {
+            @extend .clickable;
+            margin-bottom: 5px;
+            color: black;
+            text-decoration: underline;
+            font-size: 0.8em;
+          }
         }
-      }
 
-      a {
-        color: inherit;
-      }
+        a {
+          color: inherit;
+        }
 
-      a:after {
-        content: '\2192';
-        margin-left: 0;
+        a:after {
+          content: '\2192';
+          margin-left: 0;
+        }
       }
     }
 
     .news-bar {
       right: 0;
       width: 64%;
-      border-left: 3px solid black;
+      border: 0;
 
-      h4 {
-        margin: 10px 0 5px 5px;
-      }
+      .news-box-container {
+        width: auto;
+        height: 100%;
+        margin: 5px $general-padding;
+        box-sizing: border-box;
+        
+        .news-box {
+          position: relative;
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          height: 100%;
+          border: 2px solid black;
+        }
 
-      ul {
-        list-style: none;
-        margin: 0;
-        padding: 5px 0 5px 10px;
+        h4 {
+          margin: $general-padding 0 5px 5px;
+        }
 
-        li {
-          @extend .clickable;
-          font-size: 0.9em;
-          margin-bottom: 5px;
+        ul {
+          list-style: none;
+          margin: 0;
+          padding: 5px $general-padding;
 
-          span {
+          li {
+            font-size: 0.9em;
+            margin-bottom: 5px;
             color: black;
-            text-decoration: underline;
-          }
 
-          small {
-            color: #a0a0a0;
-            font-style: italic;
-            font-size: 0.7em;
-            margin-left: 5px;
+            span {
+              @extend .clickable;
+              text-decoration: underline;
+            }
+
+            small {
+              color: gray;
+              font-style: italic;
+              font-size: 0.7em;
+              margin-left: 5px;
+            }
           }
         }
       }
@@ -154,8 +176,8 @@ body {
       position: absolute;
       bottom: 0;
       width: 100%;
-      height: 25%;
-      border-top: 3px solid black;
+      height: 20%;
+      border: 0;
       padding: 0;
       margin: 0;
 
@@ -165,14 +187,18 @@ body {
         padding: 0;
         width: 50%;
         height: 100%;
-        cursor: pointer;
         text-align: center;
         vertical-align: middle;
+
+        span {
+          cursor: pointer;
+          margin-top: 10px;
+        }
       }
 
       .left-box {
         left: 0;
-        border-right: 3px solid black;
+        border: 0;
       }
 
       .right-box {
@@ -190,11 +216,14 @@ body {
 
   .close-page-button {
     position: absolute;
-    top: 10px;
+    top: 3px;
     right: 15px;
+    padding: 3px;
+    line-height: 0.5em;
   }
 
   .page-content-container {
+    position: relative;
     width: 100%;
     height: 100%;
     margin: 0;
@@ -203,8 +232,20 @@ body {
     overflow-y: auto;
 
     .page-content {
-      margin-top: 10px;
-      padding: 10px;
+      margin: 20px 0;
+      padding: 0 $general-padding;
+      box-sizing: border-box;
+
+      span {
+        display: inline;
+      }
+
+      img {
+        width: 100%;
+        min-width: $page-min-width - ($general-padding * 2);
+        max-width: $page-max-width - ($general-padding * 2);
+        height: auto;
+      }
     }
   }
 }
@@ -217,23 +258,28 @@ body {
   font-size: 0.5em;
 }
 
-.notification-box {
+.notification-box, .save-button {
   position: fixed;
   z-index: 10;
-  right: 10px;
+  right: $general-padding;
   width: 200px;
 
   .notification-box-content {
     background: #88dd88;
     position: relative;
-    padding: 10px;
+    padding: $general-padding;
   }
 }
 
-div {
-  margin: 20px auto;
+.save-button {
+  bottom: $general-padding;
+}
 
-  .content-title, .content-area {
+#admin {
+  margin: 20px auto 40px;
+
+  .content-container {
+    @include center-block(0);
     width: 70%;
     min-width: 300px;
     max-width: 800px;
@@ -245,8 +291,8 @@ div {
 
   .content-area {
     background: #dedede;
-    margin: 10px auto;
-    padding: 10px;
+    margin: $general-padding auto;
+    padding: $general-padding;
   }
 }
 
@@ -256,12 +302,16 @@ label, span, input {
 }
 
 label {
-  margin-top: 10px;
+  margin-top: $general-padding;
   width: 50%;
 
   span {
     font-weight: bold;
   }
+}
+
+label.full-width {
+  width: 100%;
 }
 
 .page-url {
@@ -272,6 +322,15 @@ label {
   @extend .right;
 }
 
+.delete-page-button, .delete-news-button {
+  @extend .delete-button;
+}
+
 .sort-handle {
   cursor: move;
+}
+
+// Because the perfect-scrollbar plugin can't seem to do this itself:
+.ps-scrollbar-y {
+
 }

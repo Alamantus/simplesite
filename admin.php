@@ -1,7 +1,8 @@
 <?php
 define('CORRECT_PASSWORD', 'test');
 
-$pw = (isset($_POST['pw'])) ? $_POST['pw'] : 'stranger';
+$pw = $_POST['pw'];
+$name = (isset($_POST['login_name']) && $_POST['login_name'] !== '') ? $_POST['login_name'] : 'stranger';
 $pw_correct = ($pw && $pw === CORRECT_PASSWORD);
 $login_required = (!$pw || !$pw_correct);
 ?>
@@ -45,7 +46,7 @@ if ($login_required) {
       </label>
       <label>
         <span>Password</span>
-        <input type="text" name="pw" />
+        <input type="password" name="pw" />
       </label>
       <button type="submit">Log In</button>
     </form>
@@ -63,11 +64,11 @@ if ($login_required) {
     </div>
   </div>
 
-  <h3>Hi, <?php echo $_POST['login_name']; ?>!</h3>
+  <h3>Hi, <?php echo $name; ?>!</h3>
 
   <div id="admin"></div>
 
-  <button id="saveChanges" class="right">Save Everything</button>
+  <button id="saveChanges" class="save-button">Save Everything</button>
   
   <!-- jQuery + jQuery UI plugin -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>

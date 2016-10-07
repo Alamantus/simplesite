@@ -1,7 +1,7 @@
-.clickable, #site .container .menu-bar ul li, #site .container .news-bar ul li, .toggle-button {
+.clickable, #site .container .menu-bar .menu-bar-contents ul li, #site .container .news-bar .news-box-container ul li span, .toggle-button {
   cursor: pointer; }
 
-.right, .toggle-button, .delete-button {
+.right, .toggle-button, .delete-button, .delete-page-button, .delete-news-button {
   float: right; }
 
 .left {
@@ -63,55 +63,71 @@ body {
     position: absolute;
     top: 0;
     margin: 0;
-    border-bottom: 3px solid black;
+    border: 0;
     padding: 0;
-    height: 75%;
-    overflow-y: auto; }
+    height: 80%; }
   #site .container .menu-bar {
     left: 0;
     width: 35%;
-    border-right: 3px solid black; }
-    #site .container .menu-bar ul {
-      list-style: none;
-      margin: 0;
-      padding: 5px; }
-      #site .container .menu-bar ul li {
-        color: black;
-        text-decoration: underline;
-        font-size: 0.8em; }
-    #site .container .menu-bar a {
-      color: inherit; }
-    #site .container .menu-bar a:after {
-      content: '\2192';
-      margin-left: 0; }
+    border: 0;
+    overflow-y: auto; }
+    #site .container .menu-bar .menu-bar-contents {
+      position: relative;
+      height: 100%; }
+      #site .container .menu-bar .menu-bar-contents ul {
+        list-style: none;
+        margin: 0;
+        padding: 5px; }
+        #site .container .menu-bar .menu-bar-contents ul li {
+          margin-bottom: 5px;
+          color: black;
+          text-decoration: underline;
+          font-size: 0.8em; }
+      #site .container .menu-bar .menu-bar-contents a {
+        color: inherit; }
+      #site .container .menu-bar .menu-bar-contents a:after {
+        content: '\2192';
+        margin-left: 0; }
   #site .container .news-bar {
     right: 0;
     width: 64%;
-    border-left: 3px solid black; }
-    #site .container .news-bar h4 {
-      margin: 10px 0 5px 5px; }
-    #site .container .news-bar ul {
-      list-style: none;
-      margin: 0;
-      padding: 5px 0 5px 10px; }
-      #site .container .news-bar ul li {
-        font-size: 0.9em;
-        margin-bottom: 5px; }
-        #site .container .news-bar ul li span {
-          color: black;
-          text-decoration: underline; }
-        #site .container .news-bar ul li small {
-          color: #a0a0a0;
-          font-style: italic;
-          font-size: 0.7em;
-          margin-left: 5px; }
+    border: 0; }
+    #site .container .news-bar .news-box-container {
+      width: auto;
+      height: 100%;
+      margin: 5px 10px;
+      box-sizing: border-box; }
+      #site .container .news-bar .news-box-container .news-box {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        border: 2px solid black; }
+      #site .container .news-bar .news-box-container h4 {
+        margin: 10px 0 5px 5px; }
+      #site .container .news-bar .news-box-container ul {
+        list-style: none;
+        margin: 0;
+        padding: 5px 10px; }
+        #site .container .news-bar .news-box-container ul li {
+          font-size: 0.9em;
+          margin-bottom: 5px;
+          color: black; }
+          #site .container .news-bar .news-box-container ul li span {
+            text-decoration: underline; }
+          #site .container .news-bar .news-box-container ul li small {
+            color: gray;
+            font-style: italic;
+            font-size: 0.7em;
+            margin-left: 5px; }
   #site .container .footer {
     display: table;
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 25%;
-    border-top: 3px solid black;
+    height: 20%;
+    border: 0;
     padding: 0;
     margin: 0; }
     #site .container .footer .left-box, #site .container .footer .right-box {
@@ -120,12 +136,14 @@ body {
       padding: 0;
       width: 50%;
       height: 100%;
-      cursor: pointer;
       text-align: center;
       vertical-align: middle; }
+      #site .container .footer .left-box span, #site .container .footer .right-box span {
+        cursor: pointer;
+        margin-top: 10px; }
     #site .container .footer .left-box {
       left: 0;
-      border-right: 3px solid black; }
+      border: 0; }
     #site .container .footer .right-box {
       right: 0;
       border: 0; }
@@ -136,9 +154,12 @@ body {
   overflow: hidden; }
   .page .close-page-button {
     position: absolute;
-    top: 10px;
-    right: 15px; }
+    top: 3px;
+    right: 15px;
+    padding: 3px;
+    line-height: 0.5em; }
   .page .page-content-container {
+    position: relative;
     width: 100%;
     height: 100%;
     margin: 0;
@@ -146,32 +167,44 @@ body {
     overflow-x: hidden;
     overflow-y: auto; }
     .page .page-content-container .page-content {
-      margin-top: 10px;
-      padding: 10px; }
+      margin: 20px 0;
+      padding: 0 10px;
+      box-sizing: border-box; }
+      .page .page-content-container .page-content span {
+        display: inline; }
+      .page .page-content-container .page-content img {
+        width: 100%;
+        min-width: 280px;
+        max-width: 580px;
+        height: auto; }
 
 .toggle-button {
   font-weight: normal !important;
   font-size: 0.5em; }
 
-.notification-box {
+.notification-box, .save-button {
   position: fixed;
   z-index: 10;
   right: 10px;
   width: 200px; }
-  .notification-box .notification-box-content {
+  .notification-box .notification-box-content, .save-button .notification-box-content {
     background: #88dd88;
     position: relative;
     padding: 10px; }
 
-div {
-  margin: 20px auto; }
-  div .content-title, div .content-area {
+.save-button {
+  bottom: 10px; }
+
+#admin {
+  margin: 20px auto 40px; }
+  #admin .content-container {
+    margin: 0 auto;
     width: 70%;
     min-width: 300px;
     max-width: 800px; }
-  div .content-title {
+  #admin .content-title {
     margin: 20px auto 5px; }
-  div .content-area {
+  #admin .content-area {
     background: #dedede;
     margin: 10px auto;
     padding: 10px; }
@@ -185,6 +218,9 @@ label {
   width: 50%; }
   label span {
     font-weight: bold; }
+
+label.full-width {
+  width: 100%; }
 
 .page-url {
   width: 90%; }

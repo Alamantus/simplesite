@@ -10,7 +10,7 @@ $(document).ready(function() {
 
       htmlContent += '<div class="site-content">';
 
-        htmlContent += '<div class="menu-bar">';
+        htmlContent += '<div class="menu-bar"><div class="menu-bar-contents">';
 
           htmlContent += '<ul>';
 
@@ -21,9 +21,9 @@ $(document).ready(function() {
           htmlContent += '</ul>';
 
         // End of menu-bar
-        htmlContent += '</div>';
+        htmlContent += '</div></div>';
 
-        htmlContent += '<div class="news-bar">';
+        htmlContent += '<div class="news-bar"><div class="news-box-container"><div class="news-box">';
 
           htmlContent += '<h4>News</h4>';
 
@@ -38,25 +38,46 @@ $(document).ready(function() {
           htmlContent += '</ul>';
 
         // End of news-bar
-        htmlContent += '</div>';
+        htmlContent += '</div></div></div>';
 
         htmlContent += '<div class="footer">';
 
           htmlContent += '<div class="left-box">';
 
-            htmlContent += '<span>something goes here</span>';
+            htmlContent += '<span id="footerLeftLink" class="footer-link">' + data.footerLeft.title + '</span>';
+
+            htmlContent += '<div id="footerLeftPage" class="page-container" style="display: none;"><div class="page">';
+
+              htmlContent += '<div class="page-content-container"><div id="footerLeftContent" class="page-content">'
+                + encodeHtml(data.footerLeft.text)
+              + '</div></div>';
+
+              htmlContent += '<button id="footerLeft" class="close-page-button">&times;</button>';
+
+            // End of footerLeft Page
+            htmlContent += '</div></div>';
 
           htmlContent += '</div>';
 
           htmlContent += '<div class="right-box">';
 
-            htmlContent += '<span>and here</span>';
+            htmlContent += '<span id="footerRightLink" class="footer-link">' + data.footerRight.title + '</span>';
+
+            htmlContent += '<div id="footerRightPage" class="page-container" style="display: none;"><div class="page">';
+
+              htmlContent += '<div class="page-content-container"><div id="footerRightContent" class="page-content">'
+                + encodeHtml(data.footerRight.text)
+              + '</div></div>';
+
+              htmlContent += '<button id="footerRight" class="close-page-button">&times;</button>';
+
+            // End of footerRight Page
+            htmlContent += '</div></div>';
 
           htmlContent += '</div>';
 
         // End of footer
         htmlContent += '</div>';
-        
 
       // End of site-content
       htmlContent += '</div>';
@@ -66,13 +87,15 @@ $(document).ready(function() {
 
     $('#site').html(htmlContent);
 
+    $('.menu-bar, .news-box, .page-content-container').perfectScrollbar();
+
     $('.page-container').each(function () {
       var page = $(this).detach();
       $('#site').append(page);
     });
 
     // Set Up Listeners
-    $('.menu-item').click(function() {
+    $('.menu-item, .footer-link').click(function() {
       $('#' + this.id.replace('Link', 'Page')).fadeIn();
     });
 
@@ -97,7 +120,7 @@ function buildSidebarContent(index, title, text, type) {
         + encodeHtml(text)
       + '</div></div>';
 
-      result += '<button id="news' + index + '" class="close-page-button">&times;</button>';
+      result += '<button id="menu' + index + '" class="close-page-button">&times;</button>';
 
     result += '</div></div>';
   }
@@ -109,10 +132,15 @@ function buildSidebarContent(index, title, text, type) {
 
 function buildNewsContent(index, title, text, date) {
   index = index.toString();
+  var hasText = (text !== '');
+
   var result = '<li>';
 
+  if (!hasText) {
+    result += title;
+  } else {
     result += '<span id="news' + index + 'Link" class="menu-item">' + title + '</span>';
-    result += '<small id="news' + index + 'Published">' + moment(date).format('h:mm:ssa D/M/YYYY') + '</small>';
+
     result += '<div id="news' + index + 'Page" class="page-container" style="display: none;"><div class="page">';
 
       result += '<div class="page-content-container"><div id="news' + index + 'Content" class="page-content">'
@@ -122,6 +150,7 @@ function buildNewsContent(index, title, text, date) {
       result += '<button id="news' + index + '" class="close-page-button">&times;</button>';
 
     result += '</div></div>';
+  }
 
   result += '</li>';
 
