@@ -72,8 +72,8 @@ body {
     .menu-bar {
       float: left;
       width: 30%;
-      min-width: $page-min-width / 3;
-      max-width: $page-max-width / 3;
+      min-width: $page-min-width * 0.3;
+      max-width: $page-max-width * 0.3;
       margin: 0;
       border-right: 3px solid black;
       border-bottom: 3px solid black;
@@ -99,6 +99,36 @@ body {
       a:after {
         content: '\2192';
         margin-left: 0;
+      }
+    }
+
+    .news-bar {
+      float: right;
+      width: 70%;
+      min-width: $page-min-width * 0.7;
+      max-width: $page-max-width * 0.7;
+      margin: 0;
+      border-left: 3px solid black;
+      border-bottom: 3px solid black;
+      padding: 5px;
+
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+          @extend .clickable;
+          color: black;
+          text-decoration: underline;
+          font-size: 0.9em;
+
+          small {
+            color: #a0a0a0;
+            font-style: italic;
+            font-size: 0.7em;
+          }
+        }
       }
     }
   }

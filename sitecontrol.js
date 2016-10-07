@@ -22,6 +22,23 @@ $(document).ready(function() {
 
         // End of menu-bar
         htmlContent += '</div>';
+
+        htmlContent += '<div class="news-bar">';
+
+          htmlContent += '<h4>News</h4>';
+
+          htmlContent += '<ul>';
+
+          for (var i = 0; i < data.news.length; i++) {
+            if (moment().valueOf() > data.news[i].published) {
+              htmlContent += buildnewsContent(i, data.news[i].title, data.news[i].text, data.news[i].published);
+            }
+          }
+
+          htmlContent += '</ul>';
+
+        // End of menu-bar
+        htmlContent += '</div>';
         
 
       // End of site-content
@@ -39,11 +56,11 @@ $(document).ready(function() {
 
     // Set Up Listeners
     $('.menu-item').click(function() {
-      $('#' + this.id + 'Page').fadeIn();
+      $('#' + this.id.replace('Link', 'Page').fadeIn();
     });
 
     $('.close-page-button').click(function() {
-      $('#menu' + this.id + 'Page').fadeOut();
+      $('#' + this.id + 'Page').fadeOut();
     });
 
   });
@@ -56,17 +73,38 @@ function buildSidebarContent(index, title, text, type) {
   if (type === 'link') {
     result += '<a href="' + encodeHtml(text) + '" target="_blank">' + title + '</a>';
   } else {
-    result += '<span id="menu' + index + '" class="menu-item">' + title + '</span>';
+    result += '<span id="menu' + index + 'Link" class="menu-item">' + title + '</span>';
     result += '<div id="menu' + index + 'Page" class="page-container" style="display: none;"><div class="page">';
 
       result += '<div class="page-content-container"><div id="menu' + index + 'Content" class="page-content">'
         + encodeHtml(text)
       + '</div></div>';
 
-      result += '<button id="' + index + '" class="close-page-button">&times;</button>';
+      result += '<button id="news' + index + '" class="close-page-button">&times;</button>';
 
     result += '</div></div>';
   }
+
+  result += '</li>';
+
+  return result;
+}
+
+function buildNewsContent(index, title, text, date) {
+  index = index.toString();
+  var result = '<li>';
+
+    result += '<span id="news' + index + 'Link" class="menu-item">' + title + '</span>';
+    result += '<small id="news' + index + 'Published">' + moment(date).format('h:mm:ssa D/M/YYYY') + '</small>';
+    result += '<div id="news' + index + 'Page" class="page-container" style="display: none;"><div class="page">';
+
+      result += '<div class="page-content-container"><div id="news' + index + 'Content" class="page-content">'
+        + encodeHtml(text)
+      + '</div></div>';
+
+      result += '<button id="news' + index + '" class="close-page-button">&times;</button>';
+
+    result += '</div></div>';
 
   result += '</li>';
 
