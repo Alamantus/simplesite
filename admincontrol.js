@@ -17,21 +17,27 @@ $(document).ready(function() {
           <input type="text" id="siteTitle" value="' + data.siteTitle + '" />\
         </label>';
 
-        htmlContent += '<label><span>Website Tagline</span>\
-          <input type="text" id="siteTagline" value="' + data.siteTagline + '" />\
+        htmlContent += '<label class="full-width"><span>Title Styles</span>\
+          <input type="text" id="titleStyles" value="' + data.titleStyles + '" />\
+        </label>';
+
+        htmlContent += '<label><span>News Headline</span>\
+          <input type="text" id="newsHeadline" value="' + data.newsHeadline + '" />\
+        </label>';
+
+        htmlContent += '<label class="full-width"><span>News Headline Styles</span>\
+          <input type="text" id="newsHeadlineStyles" value="' + data.newsHeadlineStyles + '" />\
         </label>';
           
         htmlContent += '<label>\
             <span id="footerLeftTitleLabel">Left Footer Title</span>\
             <input type="text" id="footerLeftTitle" class="footer-title" value="' + data.footerLeft.title + '" />\
           </label>';
-
-        htmlContent += '<div id="footerLeftTextContainer">\
-            <label>\
-              <span>Left Footer Text</span>\
-            </label>\
-            <textarea id="footerLeftText" class="footer-text">' + data.footerLeft.text + '</textarea>\
-          </div>';
+          
+        htmlContent += '<label class="full-width">\
+            <span id="footerLeftTitleLabel">Left Footer Link</span>\
+            <input type="text" id="footerLeftURL" class="footer-text" value="' + data.footerLeft.text + '" />\
+          </label>';
           
         htmlContent += '<label>\
             <span id="footerRightTitleLabel">Right Footer Title</span>\
@@ -209,7 +215,7 @@ function buildPageEntry(index, title, text, type) {
         <textarea id="page' + index.toString() + 'Text" class="wysiwyg">' + text + '</textarea>\
       </div>';
 
-    result += '<label id="page' + index.toString() + 'URLContainer" style="display:' + ((type === 'link') ? 'block' : 'none') + ';">\
+    result += '<label id="page' + index.toString() + 'URLContainer" class="full-width" style="display:' + ((type === 'link') ? 'block' : 'none') + ';">\
         <span>Link URL</span>\
         <input type="text" id="page' + index.toString() + 'URL" class="page-url" value="' + text + '" />\
       </label>';
@@ -315,10 +321,12 @@ function saveSiteData() {
   if (confirm('The data entered here will REPLACE the data currently on the site.\nIf you are sure everything is correct, click "OK" to save your changes.')) {
     var newSiteData = {
       siteTitle: $('#siteTitle').val(),
-      siteTagline: $('#siteTagline').val(),
+      titleStyles: $('#titleStyles').val(),
+      newsHeadline: $('#newsHeadline').val(),
+      newsHeadlineStyles: $('#newsHeadlineStyles').val(),
       footerLeft: {
         title: $('#footerLeftTitle').val(),
-        text: escapeHtml($('#footerLeftText').tinymce().getContent())
+        text: escapeHtml($('#footerLeftURL').val())
       },
       footerRight: {
         title: $('#footerRightTitle').val(),
@@ -338,7 +346,7 @@ function saveSiteData() {
       if (type !== 'link') {
         text = escapeHtml($('#' + pageId + 'Text').tinymce().getContent());
       } else {
-        text = $('#' + pageId + 'URL').val()
+        text = escapeHtml($('#' + pageId + 'URL').val())
       }
 
       newSiteData.pages.push({

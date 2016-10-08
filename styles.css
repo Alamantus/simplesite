@@ -7,10 +7,9 @@
 .left {
   float: left; }
 
-/* * {
-  display: block;
-  position: relative;
-} */
+* {
+  font-family: 'Raleway', sans-serif; }
+
 head {
   display: none; }
 
@@ -32,7 +31,6 @@ body {
   #site .container, #site .page, .page-container .container, .page-container .page {
     position: relative;
     margin: 10% auto;
-    border: 3px solid black;
     background: #ffffff;
     width: 30%;
     min-width: 300px;
@@ -40,6 +38,8 @@ body {
     height: 50%;
     min-height: 400px;
     max-height: 800px; }
+  #site .page, .page-container .page {
+    border: 3px solid black; }
 
 #site .container {
   display: flex;
@@ -51,12 +51,12 @@ body {
   #site .container .site-content {
     flex: 1; }
   #site .container .header {
-    border-bottom: 3px solid black;
+    border: 0;
     text-align: center; }
     #site .container .header a {
       color: black;
       text-decoration: none; }
-    #site .container .header .site-title, #site .container .header .site-tagline {
+    #site .container .header .site-title {
       margin: 5px 0;
       width: 100%; }
   #site .container .menu-bar, #site .container .news-bar {
@@ -81,13 +81,9 @@ body {
         #site .container .menu-bar .menu-bar-contents ul li {
           margin-bottom: 5px;
           color: black;
-          text-decoration: underline;
-          font-size: 0.8em; }
+          text-decoration: underline; }
       #site .container .menu-bar .menu-bar-contents a {
         color: inherit; }
-      #site .container .menu-bar .menu-bar-contents a:after {
-        content: '\2192';
-        margin-left: 0; }
   #site .container .news-bar {
     right: 0;
     width: 64%;
@@ -111,16 +107,18 @@ body {
         margin: 0;
         padding: 5px 10px; }
         #site .container .news-bar .news-box-container ul li {
-          font-size: 0.9em;
           margin-bottom: 5px;
           color: black; }
           #site .container .news-bar .news-box-container ul li span {
+            display: inline;
             text-decoration: underline; }
           #site .container .news-bar .news-box-container ul li small {
             color: gray;
             font-style: italic;
             font-size: 0.7em;
             margin-left: 5px; }
+        #site .container .news-bar .news-box-container ul li:before {
+          content: '- '; }
   #site .container .footer {
     display: table;
     position: absolute;
@@ -177,6 +175,23 @@ body {
         min-width: 280px;
         max-width: 580px;
         height: auto; }
+      .page .page-content-container .page-content iframe {
+        border: 0;
+        width: 100%;
+        min-width: 280px;
+        max-width: 580px;
+        height: 100%;
+        min-height: 360px;
+        max-height: 760px; }
+    .page .page-content-container .fill-space {
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100%;
+      height: 100%; }
+      .page .page-content-container .fill-space iframe {
+        border: 0;
+        width: 100%;
+        height: 100%; }
 
 .toggle-button {
   font-weight: normal !important;

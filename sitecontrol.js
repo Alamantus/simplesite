@@ -4,8 +4,7 @@ $(document).ready(function() {
     var htmlContent = '<div class="container">';
 
       htmlContent += '<div class="header"><a href="./">\
-        <h2 class="site-title">' + data.siteTitle + '</h2>\
-        <h4 class="site-tagline">' + data.siteTagline + '</h4>\
+        <span class="site-title" style="' + data.titleStyles + '">' + data.siteTitle + '</span>\
       </a></div>';
 
       htmlContent += '<div class="site-content">';
@@ -25,7 +24,7 @@ $(document).ready(function() {
 
         htmlContent += '<div class="news-bar"><div class="news-box-container"><div class="news-box">';
 
-          htmlContent += '<h4>News</h4>';
+          htmlContent += '<span style="' + data.newsHeadlineStyles + '">' + data.newsHeadline + '</span>';
 
           htmlContent += '<ul>';
 
@@ -48,8 +47,8 @@ $(document).ready(function() {
 
             htmlContent += '<div id="footerLeftPage" class="page-container" style="display: none;"><div class="page">';
 
-              htmlContent += '<div class="page-content-container"><div id="footerLeftContent" class="page-content">'
-                + encodeHtml(data.footerLeft.text)
+              htmlContent += '<div class="page-content-container"><div id="footerLeftContent" class="page-content fill-space">'
+                + '<iframe id="footerLeftPageIFrame" src="" data-src="' + encodeHtml(data.footerLeft.text) + '"></iframe>'
               + '</div></div>';
 
               htmlContent += '<button id="footerLeft" class="close-page-button">&times;</button>';
@@ -96,11 +95,15 @@ $(document).ready(function() {
 
     // Set Up Listeners
     $('.menu-item, .footer-link').click(function() {
-      $('#' + this.id.replace('Link', 'Page')).fadeIn();
+      var targetId = this.id.replace('Link', 'Page');
+      $('#' + targetId + 'IFrame').attr('src', $('#' + targetId + 'IFrame').attr('data-src'));
+      $('#' + targetId).fadeIn();
     });
 
     $('.close-page-button').click(function() {
-      $('#' + this.id + 'Page').fadeOut();
+      var targetId = this.id + 'Page';
+      $('#' + targetId + 'IFrame').attr('src', '');
+      $('#' + targetId).fadeOut();
     });
 
   });
@@ -110,20 +113,22 @@ function buildSidebarContent(index, title, text, type) {
   index = index.toString();
   var result = '<li>';
 
-  if (type === 'link') {
-    result += '<a href="' + encodeHtml(text) + '" target="_blank">' + title + '</a>';
-  } else {
     result += '<span id="menu' + index + 'Link" class="menu-item">' + title + '</span>';
     result += '<div id="menu' + index + 'Page" class="page-container" style="display: none;"><div class="page">';
 
-      result += '<div class="page-content-container"><div id="menu' + index + 'Content" class="page-content">'
-        + encodeHtml(text)
-      + '</div></div>';
+      result += '<div class="page-content-container"><div id="menu' + index + 'Content" class="page-content' + ((type === 'link') ? ' fill-space' : '') + '">';
+
+      if (type === 'link') {
+        result += '<iframe id="menu' + index + 'PageIFrame" src="" data-src="' + encodeHtml(text) + '"></iframe>';
+      } else {
+        result += encodeHtml(text);
+      }
+
+      result += '</div></div>';
 
       result += '<button id="menu' + index + '" class="close-page-button">&times;</button>';
 
     result += '</div></div>';
-  }
 
   result += '</li>';
 

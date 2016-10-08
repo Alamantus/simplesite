@@ -20,6 +20,9 @@ $site_data = json_decode(file_get_contents('sitedata.json'), true);
   <!-- jQuery Perfect Scrollbar CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.6.12/css/perfect-scrollbar.min.css" />
 
+  <!-- Google Raleway Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+
   <link rel="stylesheet" href="styles.css" />
 </head>
 
