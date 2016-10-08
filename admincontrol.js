@@ -43,13 +43,11 @@ $(document).ready(function() {
             <span id="footerRightTitleLabel">Right Footer Title</span>\
             <input type="text" id="footerRightTitle" class="footer-title" value="' + data.footerRight.title + '" />\
           </label>';
-
-        htmlContent += '<div id="footerRightTextContainer">\
-            <label>\
-              <span>Right Footer Text</span>\
-            </label>\
-            <textarea id="footerRightText" class="footer-text">' + data.footerRight.text + '</textarea>\
-          </div>';
+          
+        htmlContent += '<label class="full-width">\
+            <span id="footerRightTitleLabel">Right Footer Link</span>\
+            <input type="text" id="footerRightURL" class="footer-text" value="' + data.footerRight.text + '" />\
+          </label>';
 
         // FIXME: Add website image upload when I feel like it.
         /*htmlContent += '<label><span>Website Image</span>\
@@ -330,7 +328,7 @@ function saveSiteData() {
       },
       footerRight: {
         title: $('#footerRightTitle').val(),
-        text: escapeHtml($('#footerRightText').tinymce().getContent())
+        text: escapeHtml($('#footerRightURL').val())
       },
       pages: [],
       news: []

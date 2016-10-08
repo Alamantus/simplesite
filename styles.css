@@ -236,6 +236,8 @@ label {
 
 label.full-width {
   width: 100%; }
+  label.full-width input {
+    width: 100%; }
 
 .page-url {
   width: 90%; }

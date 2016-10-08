@@ -64,8 +64,8 @@ $(document).ready(function() {
 
             htmlContent += '<div id="footerRightPage" class="page-container" style="display: none;"><div class="page">';
 
-              htmlContent += '<div class="page-content-container"><div id="footerRightContent" class="page-content">'
-                + encodeHtml(data.footerRight.text)
+              htmlContent += '<div class="page-content-container"><div id="footerRightContent" class="page-content fill-space">'
+                + '<iframe id="footerRightPageIFrame" src="" data-src="' + encodeHtml(data.footerRight.text) + '"></iframe>'
               + '</div></div>';
 
               htmlContent += '<button id="footerRight" class="close-page-button">&times;</button>';
