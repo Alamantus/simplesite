@@ -1,9 +1,9 @@
 <?php
-define('CORRECT_PASSWORD', 'test');
+require('correctpassword.php');
 
 $pw = $_POST['pw'];
 $name = (isset($_POST['login_name']) && $_POST['login_name'] !== '') ? $_POST['login_name'] : 'stranger';
-$pw_correct = ($pw && $pw === CORRECT_PASSWORD);
+$pw_correct = ($pw !== '' && $pw === CORRECT_PASSWORD);
 $login_required = (!$pw || !$pw_correct);
 ?>
 <!DOCTYPE html>
@@ -57,6 +57,7 @@ if ($login_required) {
 // End if no password or incorrect.
 } else {
 ?>
+  <script>window.adminpw = '<?php echo $pw; ?>';</script>
   <div id="notifications" class="notification-box">
     <div class="notification-box-content">
       <button id="closeNotifications" class="right">&times;</button>
@@ -67,6 +68,15 @@ if ($login_required) {
   <h3>Hi, <?php echo $name; ?>!</h3>
 
   <div id="admin"></div>
+
+  <form id="changePassword" action="changepassword.php" method="post">
+    <label><span>Change Admin Password</span>
+      <small>This takes effect immediately, so you may need to log back in after changing it. Be careful!</small>
+      <input name="newpw" type="text" />
+      <input name="pw" type="hidden" value="<?php echo $pw; ?>" />
+    </label>
+    <button type="submit">Change Password</button>
+  </form>
 
   <button id="saveChanges" class="save-button">Save Everything</button>
   

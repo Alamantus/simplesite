@@ -1,5 +1,7 @@
 <?php
-if ($_POST['pw'] === 'test') {
+require('correctpassword.php');
+
+if ($_POST['pw'] === CORRECT_PASSWORD) {
   if (file_put_contents('sitedata.json', $_POST['sitedata']) !== false) {
     echo "Saved successfully!";
   } else {

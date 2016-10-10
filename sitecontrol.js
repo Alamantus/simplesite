@@ -8,11 +8,11 @@ $(document).ready(function() {
 
         htmlContent += '<div class="menu-bar">';
 
+          htmlContent += '<div class="menu-bar-contents">';
+
           htmlContent += '<div class="header"><a href="./">\
             <span class="site-title" style="' + data.titleStyles + '">' + data.siteTitle + '</span>\
           </a></div>';
-
-          htmlContent += '<div class="menu-bar-contents">';
 
           htmlContent += '<ul>';
 

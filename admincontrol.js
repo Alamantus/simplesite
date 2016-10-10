@@ -1,4 +1,3 @@
-window.adminpw = 'test';
 var nextPageIndex = 0;
 var nextNewsIndex = 0;
 var nextFooterLinkIndex = 0;
