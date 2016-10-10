@@ -3,18 +3,21 @@ $(document).ready(function() {
   $.getJSON('sitedata.json?nocache=' + moment().valueOf().toString(), function(data) {
     var htmlContent = '<div class="container">';
 
-      htmlContent += '<div class="header"><a href="./">\
-        <span class="site-title" style="' + data.titleStyles + '">' + data.siteTitle + '</span>\
-      </a></div>';
 
       htmlContent += '<div class="site-content">';
 
-        htmlContent += '<div class="menu-bar"><div class="menu-bar-contents">';
+        htmlContent += '<div class="menu-bar">';
+
+          htmlContent += '<div class="header"><a href="./">\
+            <span class="site-title" style="' + data.titleStyles + '">' + data.siteTitle + '</span>\
+          </a></div>';
+
+          htmlContent += '<div class="menu-bar-contents">';
 
           htmlContent += '<ul>';
 
           for (var i = 0; i < data.pages.length; i++) {
-            htmlContent += buildSidebarContent(i, data.pages[i].title, data.pages[i].text, data.pages[i].type);
+            htmlContent += buildSidebarContent(i, data.pages[i].title, data.pages[i].text, data.pages[i].type, data.menuEntryStyles);
           }
 
           htmlContent += '</ul>';
@@ -24,13 +27,13 @@ $(document).ready(function() {
 
         htmlContent += '<div class="news-bar"><div class="news-box-container"><div class="news-box">';
 
-          htmlContent += '<span style="' + data.newsHeadlineStyles + '">' + data.newsHeadline + '</span>';
+          htmlContent += '<span style="' + data.newsHeadlineStyles + '">' + encodeHtml(data.newsHeadline) + '</span>';
 
           htmlContent += '<ul>';
 
           for (var i = 0; i < data.news.length; i++) {
             if (moment().valueOf() > data.news[i].published) {
-              htmlContent += buildNewsContent(i, data.news[i].title, data.news[i].text, data.news[i].published);
+              htmlContent += buildNewsContent(i, data.news[i].title, data.news[i].text, data.news[i].published, data.newsEntryStyles);
             }
           }
 
@@ -40,40 +43,10 @@ $(document).ready(function() {
         htmlContent += '</div></div></div>';
 
         htmlContent += '<div class="footer">';
-
-          htmlContent += '<div class="left-box">';
-
-            htmlContent += '<span id="footerLeftLink" class="footer-link">' + data.footerLeft.title + '</span>';
-
-            htmlContent += '<div id="footerLeftPage" class="page-container" style="display: none;"><div class="page">';
-
-              htmlContent += '<div class="page-content-container"><div id="footerLeftContent" class="page-content fill-space">'
-                + '<iframe id="footerLeftPageIFrame" src="" data-src="' + encodeHtml(data.footerLeft.text) + '"></iframe>'
-              + '</div></div>';
-
-              htmlContent += '<button id="footerLeft" class="close-page-button">&times;</button>';
-
-            // End of footerLeft Page
-            htmlContent += '</div></div>';
-
-          htmlContent += '</div>';
-
-          htmlContent += '<div class="right-box">';
-
-            htmlContent += '<span id="footerRightLink" class="footer-link">' + data.footerRight.title + '</span>';
-
-            htmlContent += '<div id="footerRightPage" class="page-container" style="display: none;"><div class="page">';
-
-              htmlContent += '<div class="page-content-container"><div id="footerRightContent" class="page-content fill-space">'
-                + '<iframe id="footerRightPageIFrame" src="" data-src="' + encodeHtml(data.footerRight.text) + '"></iframe>'
-              + '</div></div>';
-
-              htmlContent += '<button id="footerRight" class="close-page-button">&times;</button>';
-
-            // End of footerRight Page
-            htmlContent += '</div></div>';
-
-          htmlContent += '</div>';
+        console.log(data.footer);
+        for (var i = 0; i < data.footer.length; i++) {
+          htmlContent += buildFooterBox(i, data.footer[i].title, data.footer[i].text, data.footerLinkStyles);
+        }
 
         // End of footer
         htmlContent += '</div>';
@@ -86,7 +59,7 @@ $(document).ready(function() {
 
     $('#site').html(htmlContent);
 
-    $('.menu-bar, .news-box, .page-content-container').perfectScrollbar();
+    $('.menu-bar-contents, .news-box, .page-content-container, .iframe-scroll-wrapper').perfectScrollbar();
 
     $('.page-container').each(function () {
       var page = $(this).detach();
@@ -109,17 +82,18 @@ $(document).ready(function() {
   });
 });
 
-function buildSidebarContent(index, title, text, type) {
+function buildSidebarContent(index, title, text, type, style) {
   index = index.toString();
-  var result = '<li>';
+  var result = '<li style="' + style + '">';
 
+  if (type !== 'link') {
     result += '<span id="menu' + index + 'Link" class="menu-item">' + title + '</span>';
     result += '<div id="menu' + index + 'Page" class="page-container" style="display: none;"><div class="page">';
 
       result += '<div class="page-content-container"><div id="menu' + index + 'Content" class="page-content' + ((type === 'link') ? ' fill-space' : '') + '">';
 
-      if (type === 'link') {
-        result += '<iframe id="menu' + index + 'PageIFrame" src="" data-src="' + encodeHtml(text) + '"></iframe>';
+      if (type === 'iframe') {
+        result += '<div class="iframe-scroll-wrapper"><iframe id="menu' + index + 'PageIFrame" src="" data-src="' + encodeHtml(text) + '"></iframe></div>';
       } else {
         result += encodeHtml(text);
       }
@@ -129,22 +103,26 @@ function buildSidebarContent(index, title, text, type) {
       result += '<button id="menu' + index + '" class="close-page-button">&times;</button>';
 
     result += '</div></div>';
+  } else {
+    result += '<a href="' + encodeHtml(text) + '" target="_blank"><span id="menu' + index + 'Link" class="menu-item">' + title + '</span></a>';
+  }
 
   result += '</li>';
 
   return result;
 }
 
-function buildNewsContent(index, title, text, date) {
+function buildNewsContent(index, title, text, date, style) {
   index = index.toString();
+  var encodedTitle = encodeHtml(title);
   var hasText = (text !== '');
 
-  var result = '<li>';
+  var result = '<li style="' + style + '">';
 
   if (!hasText) {
-    result += title;
+    result += encodedTitle;
   } else {
-    result += '<span id="news' + index + 'Link" class="menu-item">' + title + '</span>';
+    result += '<span id="news' + index + 'Link" class="menu-item">' + encodedTitle + '</span>';
 
     result += '<div id="news' + index + 'Page" class="page-container" style="display: none;"><div class="page">';
 
@@ -160,4 +138,39 @@ function buildNewsContent(index, title, text, date) {
   result += '</li>';
 
   return result;
+}
+
+function buildFooterBox(index, title, text, style) {
+  index = index.toString();
+
+  var result = '<div class="footer-box">';
+
+  result += '<span id="footer' + index + 'Link" class="footer-link" style="' + style + '">' + title + '</span>';
+
+  result += '<div id="footer' + index + 'Page" class="page-container" style="display: none;"><div class="page">';
+
+    result += '<div class="page-content-container"><div id="footer' + index + 'Content" class="page-content fill-space">'
+      + '<iframe id="footer' + index + 'PageIFrame" src="" data-src="' + encodeHtml(text) + '"></iframe>'
+    + '</div></div>';
+
+    result += '<button id="footer' + index + '" class="close-page-button">&times;</button>';
+
+  // End of footer box Page
+  result += '</div></div>';
+
+  // End of footer box
+  result += '</div>';
+
+  return result;
+}
+
+function sizeIFrameOnLoad(id) {
+  var iframe = document.getElementById('idIframe');
+  if (iframe) {
+    // here you can make the height, I delete it first, then I make it again
+    iframe.width = "";
+    iframe.width = iframe.contentWindow.document.body.scrollWidth + "px";
+    iframe.height = "";
+    iframe.height = iframe.contentWindow.document.body.scrollHeight + "px";
+  } 
 }

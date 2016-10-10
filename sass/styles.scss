@@ -23,9 +23,7 @@ body {
   width: 100%;
   height: 100%;
   position: absolute;
-  margin: 0;
-  padding: 0;
-  border: 0;
+  @include zero-spacing();
   top: 0;
   left: 0;
   right: 0;
@@ -82,21 +80,22 @@ body {
     .menu-bar, .news-bar {
       position: absolute;
       top: 0;
-      margin: 0;
-      border: 0;
-      padding: 0;
+      @include zero-spacing();
       height: 80%;
     }
 
     .menu-bar {
       left: 0;
       width: 35%;
-      border: 0;
-      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
 
       .menu-bar-contents {
         position: relative;
-        height: 100%;
+        height: auto;
+        text-align: center;
+        flex-grow: 1;
+        overflow-y: auto;
 
         ul {
           list-style: none;
@@ -120,7 +119,6 @@ body {
     .news-bar {
       right: 0;
       width: 64%;
-      border: 0;
 
       .news-box-container {
         width: auto;
@@ -132,9 +130,9 @@ body {
           position: relative;
           margin: 0;
           padding: 0;
+          border: 2px solid black;
           width: 100%;
           height: 100%;
-          border: 2px solid black;
         }
 
         h4 {
@@ -149,6 +147,11 @@ body {
           li {
             margin-bottom: 5px;
             color: black;
+
+            p {
+              display: inline;
+              @include zero-spacing();
+            }
 
             span {
               @extend .clickable;
@@ -165,45 +168,38 @@ body {
           }
 
           li:before {
-            content: '- '
+            content: '- ';
           }
         }
       }
     }
 
     .footer {
-      display: table;
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+
       position: absolute;
       bottom: 0;
       width: 100%;
       height: 20%;
-      border: 0;
-      padding: 0;
-      margin: 0;
+      @include zero-spacing();
 
-      .left-box, .right-box {
-        display: table-cell;
-        margin: 0;
-        padding: 0;
-        width: 50%;
-        height: 100%;
+      .footer-box {
+        @include zero-spacing();
+        flex: 1 0 20%;
         text-align: center;
-        vertical-align: middle;
 
         span {
-          cursor: pointer;
+          @extend .clickable;
           margin-top: 10px;
         }
-      }
-
-      .left-box {
-        left: 0;
-        border: 0;
-      }
-
-      .right-box {
-        right: 0;
-        border: 0;
       }
     }
   }
@@ -226,8 +222,7 @@ body {
     position: relative;
     width: 100%;
     height: 100%;
-    margin: 0;
-    padding: 0;
+    @include zero-spacing();
     overflow-x: hidden;
     overflow-y: auto;
 
@@ -264,10 +259,19 @@ body {
       width: 100%;
       height: 100%;
 
-      iframe {
-        border: 0;
+      .iframe-scroll-wrapper {
+        position: relative;
+        @include zero-spacing();
         width: 100%;
         height: 100%;
+        -webkit-overflow-scrolling: touch;
+        overflow: scroll;
+
+        iframe {
+          @include zero-spacing();
+          // width: 9999px;
+          // height: 9999px;
+        }
       }
     }
   }
@@ -337,11 +341,11 @@ label.full-width {
   width: 100%;
 
   input {
-    width: 100%;
+    width: 90%;
   }
 }
 
-.page-url {
+.page-url, .footer-text {
   width: 90%;
 }
 
@@ -349,15 +353,10 @@ label.full-width {
   @extend .right;
 }
 
-.delete-page-button, .delete-news-button {
+.delete-page-button, .delete-news-button, .delete-footer-button {
   @extend .delete-button;
 }
 
 .sort-handle {
   cursor: move;
-}
-
-// Because the perfect-scrollbar plugin can't seem to do this itself:
-.ps-scrollbar-y {
-
 }

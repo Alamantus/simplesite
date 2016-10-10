@@ -2,6 +2,12 @@
   margin: $margin auto;
 }
 
+@mixin zero-spacing() {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
 .clickable {
   cursor: pointer;
 }

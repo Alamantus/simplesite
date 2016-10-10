@@ -1,7 +1,7 @@
-.clickable, #site .container .menu-bar .menu-bar-contents ul li, #site .container .news-bar .news-box-container ul li span, .toggle-button {
+.clickable, #site .container .menu-bar .menu-bar-contents ul li, #site .container .news-bar .news-box-container ul li span, #site .container .footer .footer-box span, .toggle-button {
   cursor: pointer; }
 
-.right, .toggle-button, .delete-button, .delete-page-button, .delete-news-button {
+.right, .toggle-button, .delete-button, .delete-page-button, .delete-news-button, .delete-footer-button {
   float: right; }
 
 .left {
@@ -63,17 +63,20 @@ body {
     position: absolute;
     top: 0;
     margin: 0;
-    border: 0;
     padding: 0;
+    border: 0;
     height: 80%; }
   #site .container .menu-bar {
     left: 0;
     width: 35%;
-    border: 0;
-    overflow-y: auto; }
+    display: flex;
+    flex-direction: column; }
     #site .container .menu-bar .menu-bar-contents {
       position: relative;
-      height: 100%; }
+      height: auto;
+      text-align: center;
+      flex-grow: 1;
+      overflow-y: auto; }
       #site .container .menu-bar .menu-bar-contents ul {
         list-style: none;
         margin: 0;
@@ -86,8 +89,7 @@ body {
         color: inherit; }
   #site .container .news-bar {
     right: 0;
-    width: 64%;
-    border: 0; }
+    width: 64%; }
     #site .container .news-bar .news-box-container {
       width: auto;
       height: 100%;
@@ -97,9 +99,9 @@ body {
         position: relative;
         margin: 0;
         padding: 0;
+        border: 2px solid black;
         width: 100%;
-        height: 100%;
-        border: 2px solid black; }
+        height: 100%; }
       #site .container .news-bar .news-box-container h4 {
         margin: 10px 0 5px 5px; }
       #site .container .news-bar .news-box-container ul {
@@ -109,6 +111,11 @@ body {
         #site .container .news-bar .news-box-container ul li {
           margin-bottom: 5px;
           color: black; }
+          #site .container .news-bar .news-box-container ul li p {
+            display: inline;
+            margin: 0;
+            padding: 0;
+            border: 0; }
           #site .container .news-bar .news-box-container ul li span {
             display: inline;
             text-decoration: underline; }
@@ -120,31 +127,30 @@ body {
         #site .container .news-bar .news-box-container ul li:before {
           content: '- '; }
   #site .container .footer {
-    display: table;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
     position: absolute;
     bottom: 0;
     width: 100%;
     height: 20%;
-    border: 0;
+    margin: 0;
     padding: 0;
-    margin: 0; }
-    #site .container .footer .left-box, #site .container .footer .right-box {
-      display: table-cell;
+    border: 0; }
+    #site .container .footer .footer-box {
       margin: 0;
       padding: 0;
-      width: 50%;
-      height: 100%;
-      text-align: center;
-      vertical-align: middle; }
-      #site .container .footer .left-box span, #site .container .footer .right-box span {
-        cursor: pointer;
+      border: 0;
+      flex: 1 0 20%;
+      text-align: center; }
+      #site .container .footer .footer-box span {
         margin-top: 10px; }
-    #site .container .footer .left-box {
-      left: 0;
-      border: 0; }
-    #site .container .footer .right-box {
-      right: 0;
-      border: 0; }
 
 .page {
   padding: 0;
@@ -162,6 +168,7 @@ body {
     height: 100%;
     margin: 0;
     padding: 0;
+    border: 0;
     overflow-x: hidden;
     overflow-y: auto; }
     .page .page-content-container .page-content {
@@ -188,10 +195,19 @@ body {
       padding: 0 !important;
       width: 100%;
       height: 100%; }
-      .page .page-content-container .fill-space iframe {
+      .page .page-content-container .fill-space .iframe-scroll-wrapper {
+        position: relative;
+        margin: 0;
+        padding: 0;
         border: 0;
         width: 100%;
-        height: 100%; }
+        height: 100%;
+        -webkit-overflow-scrolling: touch;
+        overflow: scroll; }
+        .page .page-content-container .fill-space .iframe-scroll-wrapper iframe {
+          margin: 0;
+          padding: 0;
+          border: 0; }
 
 .toggle-button {
   font-weight: normal !important;
@@ -237,9 +253,9 @@ label {
 label.full-width {
   width: 100%; }
   label.full-width input {
-    width: 100%; }
+    width: 90%; }
 
-.page-url {
+.page-url, .footer-text {
   width: 90%; }
 
 .sort-handle {
