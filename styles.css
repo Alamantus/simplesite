@@ -1,4 +1,4 @@
-.clickable, #site .container .menu-bar .menu-bar-contents ul li, #site .container .news-bar .news-box-container ul li span, #site .container .footer .footer-box span, .toggle-button {
+.clickable, #site .container .menu-bar .menu-bar-contents ul li, #site .container .news-bar .news-box-container ul li .menu-item, #site .container .footer .footer-box span, .toggle-button {
   cursor: pointer; }
 
 .right, .toggle-button, .delete-button, .delete-page-button, .delete-news-button, .delete-footer-button {
@@ -112,13 +112,16 @@ body {
         #site .container .news-bar .news-box-container ul li {
           margin-bottom: 5px;
           color: black; }
+          #site .container .news-bar .news-box-container ul li a, #site .container .news-bar .news-box-container ul li a:hover, #site .container .news-bar .news-box-container ul li a:visited, #site .container .news-bar .news-box-container ul li a:active {
+            color: black; }
           #site .container .news-bar .news-box-container ul li p {
             display: inline;
             margin: 0;
             padding: 0;
             border: 0; }
           #site .container .news-bar .news-box-container ul li span {
-            display: inline;
+            display: inline; }
+          #site .container .news-bar .news-box-container ul li .menu-item {
             text-decoration: underline; }
           #site .container .news-bar .news-box-container ul li small {
             color: gray;

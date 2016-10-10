@@ -151,14 +151,21 @@ body {
             margin-bottom: 5px;
             color: black;
 
+            a, a:hover, a:visited, a:active {
+              color: black;
+            }
+
             p {
               display: inline;
               @include zero-spacing();
             }
 
             span {
-              @extend .clickable;
               display: inline;
+            }
+
+            .menu-item {
+              @extend .clickable;
               text-decoration: underline;
             }
 
