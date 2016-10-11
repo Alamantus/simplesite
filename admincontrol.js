@@ -172,6 +172,10 @@ $(document).ready(function() {
     $('.page-type').change(function () {
       toggleTypeForm(this);
     });
+
+    $('.show-text-checkbox').change(function () {
+      toggleNewsText(this);
+    });
   });
 });
 
@@ -289,7 +293,12 @@ function buildNewsEntry(index, title, text, date) {
         <textarea id="news' + index.toString() + 'Title"  class="news-title wysiwyg-simple">' + title + '</textarea>\
       </div>';
 
-    result += '<div id="news' + index.toString() + 'TextContainer">\
+    result += '<label>\
+          <span>Show Text Entry for Page</span>\
+          <input id="news' + index.toString() + 'Checkbox" class="show-text-checkbox" type="checkbox"' + ((text !== '') ? ' checked="checked"' : '') + ' />\
+        </label>';
+
+    result += '<div id="news' + index.toString() + 'TextContainer" style="display:' + ((text !== '') ? 'block' : 'none') + ';">\
         <label>\
           <span>News Text</span>\
         </label>\
@@ -320,6 +329,10 @@ function addNewNews() {
   // Add Listeners
   $('#news #' + newNewsIndex).click(function() {
     deleteNews(this.id);
+  });
+
+  $('#news' + newNewsIndex + 'Checkbox').change(function() {
+    toggleNewsText(this);
   });
 }
 
@@ -396,6 +409,16 @@ function toggleTypeForm(element) {
     $('#' + titleLabelId).text('Page Title');
     $('#' + textareaId).show();
     $('#' + urlId).hide();
+  }
+}
+
+function toggleNewsText(element) {
+  var targetId = element.id.replace('Checkbox', 'TextContainer');
+
+  if ($(element).prop('checked')) {
+    $('#' + targetId).show();
+  } else {
+    $('#' + targetId).hide();
   }
 }
 
