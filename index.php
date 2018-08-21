@@ -8,10 +8,10 @@ $site_data = json_decode(file_get_contents('sitedata.json'), true);
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <title><?php echo $site_data['siteTitle']; ?></title>
-  <meta property="description" content="<?php echo $site_data['siteTagline']; ?>" />
+  <meta property="description" content="<?php echo isset($site_data['siteTagline']) ? $site_data['siteTagline'] : ''; ?>" />
 
   <meta property="og:title" content="<?php echo $site_data['siteTitle']; ?>" />
-  <meta property="og:description" content="<?php echo $site_data['siteTagline']; ?>" />
+  <meta property="og:description" content="<?php echo isset($site_data['siteTagline']) ? $site_data['siteTagline'] : ''; ?>" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="http://<?php echo $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>" />
 
