@@ -38,6 +38,10 @@ $(document).ready(function() {
           <input type="text" id="siteTitle" value="' + data.siteTitle + '" />\
         </label>';
 
+        htmlContent += '<label><span>Website Tagline</span>\
+          <input type="text" id="siteTagline" value="' + data.siteTagline + '" />\
+        </label>';
+
         htmlContent += '<label class="full-width"><span>Title Styles</span>\
           <input type="text" id="titleStyles" value="' + data.titleStyles + '" />\
         </label>';
@@ -426,6 +430,7 @@ function saveSiteData() {
   if (confirm('The data entered here will REPLACE the data currently on the site.\nIf you are sure everything is correct, click "OK" to save your changes.')) {
     var newSiteData = {
       siteTitle: $('#siteTitle').val(),
+      siteTagline: $('#siteTagline').val(),
       titleStyles: $('#titleStyles').val(),
       newsHeadline: $('#newsHeadline').val(),
       newsHeadlineStyles: $('#newsHeadlineStyles').val(),

@@ -14,6 +14,12 @@ $(document).ready(function() {
             <span class="site-title" style="' + data.titleStyles + '">' + data.siteTitle + '</span>\
           </a></div>';
 
+          if (data.siteTagline && data.siteTagline !== '') {
+            htmlContent += '<div class="header">\
+              <span class="site-subtitle">' + data.siteTagline + '</span>\
+            </div>';
+          }
+
           htmlContent += '<ul>';
 
           for (var i = 0; i < data.pages.length; i++) {

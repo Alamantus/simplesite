@@ -1,7 +1,7 @@
 <?php
 require('correctpassword.php');
 
-$pw = $_POST['pw'];
+$pw = isset($_POST['pw']) ? $_POST['pw'] : '';
 $name = (isset($_POST['login_name']) && $_POST['login_name'] !== '') ? $_POST['login_name'] : 'stranger';
 $pw_correct = ($pw !== '' && $pw === CORRECT_PASSWORD);
 $login_required = (!$pw || !$pw_correct);
