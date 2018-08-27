@@ -92,7 +92,7 @@ function buildSidebarContent(index, title, text, type, style) {
   index = index.toString();
   var result = '<li style="' + style + '">';
 
-  if (type !== 'link') {
+  if (type !== 'link' && type !== 'page') {
     result += '<span id="menu' + index + 'Link" class="menu-item">' + title + '</span>';
     result += '<div id="menu' + index + 'Page" class="page-container" style="display: none;"><div class="page">';
 
@@ -110,7 +110,7 @@ function buildSidebarContent(index, title, text, type, style) {
 
     result += '</div></div>';
   } else {
-    result += '<a href="' + encodeHtml(text) + '" target="_blank"><span id="menu' + index + 'Link" class="menu-item">' + title + '</span></a>';
+    result += '<a href="' + encodeHtml(text) + '"' + (type === 'link' ? ' target="_blank"' : '') + '><span id="menu' + index + 'Link" class="menu-item">' + title + '</span></a>';
   }
 
   result += '</li>';
