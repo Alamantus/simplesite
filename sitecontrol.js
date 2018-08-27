@@ -22,8 +22,8 @@ $(document).ready(function() {
 
           htmlContent += '<ul>';
 
-          for (var i = 0; i < data.pages.length; i++) {
-            htmlContent += buildSidebarContent(i, data.pages[i].title, data.pages[i].text, data.pages[i].type, data.menuEntryStyles);
+          for (var i = 0; i < data.menuItems.length; i++) {
+            htmlContent += buildSidebarContent(i, data.menuItems[i].title, data.menuItems[i].text, data.menuItems[i].type, data.menuEntryStyles);
           }
 
           htmlContent += '</ul>';

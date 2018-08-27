@@ -1,4 +1,4 @@
-var nextPageIndex = 0;
+var nextMenuItemIndex = 0;
 var nextNewsIndex = 0;
 var nextFooterLinkIndex = 0;
 
@@ -47,7 +47,7 @@ $(document).ready(function() {
         </label>';
 
         htmlContent += '<label class="full-width"><span>Menu Entries Styles</span>\
-          <small>Overall style of the menu links/pages on the left.</small>\
+          <small>Overall style of the menu links on the left.</small>\
           <input type="text" id="menuEntryStyles" value="' + data.menuEntryStyles + '" />\
         </label>';
 
@@ -81,18 +81,18 @@ $(document).ready(function() {
     // End of global content
     htmlContent += '</div>';
 
-    htmlContent += '<div class="content-container"><h2 class="content-title">Menu Entries <span id="togglePages" data-target="pages" class="toggle-button">collapse</span></h2>';
+    htmlContent += '<div class="content-container"><h2 class="content-title">Menu Entries <span id="toggleMenuItems" data-target="menuItems" class="toggle-button">collapse</span></h2>';
 
-      htmlContent += '<button id="newPageButton">Add Menu Entry</button>';
+      htmlContent += '<button id="newMenuItemButton">Add Menu Entry</button>';
 
-      htmlContent += '<div id="pages">';
+      htmlContent += '<div id="menuItems">';
 
-    for (var p = 0; p < data.pages.length; p++) {
-      htmlContent += buildPageEntry(p, data.pages[p].title, data.pages[p].text, data.pages[p].type);
-      nextPageIndex++;
+    for (var p = 0; p < data.menuItems.length; p++) {
+      htmlContent += buildMenuItemEntry(p, data.menuItems[p].title, data.menuItems[p].text, data.menuItems[p].type);
+      nextMenuItemIndex++;
     }
 
-    // End of pages
+    // End of menuItems
     htmlContent += '</div>\
     </div>';
 
@@ -133,20 +133,20 @@ $(document).ready(function() {
     convertTextAreasSimple('.wysiwyg-simple');
 
     // Make content sortable
-    $('#pages, #footerLinks').sortable(sortableSettings);
-    $('#pages, #footerLinks').disableSelection();
+    $('#menuItems, #footerLinks').sortable(sortableSettings);
+    $('#menuItems, #footerLinks').disableSelection();
 
     // Set Up Listeners
     $('#closeNotifications').click(function() {
       $('#notifications').hide();
     });
 
-    $('#toggleGlobalContent, #togglePages, #toggleNews, #toggleFooter').click(function() {
+    $('#toggleGlobalContent, #toggleMenuItems, #toggleNews, #toggleFooter').click(function() {
       toggleSectionVisibility(this, '#' + $(this).attr('data-target'));
     });
 
-    $('#newPageButton').click(function() {
-      addNewPage();
+    $('#newMenuItemButton').click(function() {
+      addNewMenuItem();
     });
 
     $('#newNewsButton').click(function() {
@@ -161,8 +161,8 @@ $(document).ready(function() {
       saveSiteData();
     });
 
-    $('.delete-page-button').click(function() {
-      deletePage(this.id);
+    $('.delete-menu-item-button').click(function() {
+      deleteMenuItem(this.id);
     });
 
     $('.delete-news-button').click(function() {
@@ -173,7 +173,7 @@ $(document).ready(function() {
       deleteFooterLink(this.id);
     });
 
-    $('.page-type').change(function () {
+    $('.menu-item-type').change(function () {
       toggleTypeForm(this);
     });
 
@@ -221,16 +221,17 @@ function convertTextAreasSimple(selector) {
   });
 }
 
-function buildPageEntry(index, title, text, type) {
-  var result = '<div id="page' + index.toString() + '" class="content-area">';
+function buildMenuItemEntry(index, title, text, type) {
+  var result = '<div id="menuItem' + index.toString() + '" class="content-area">';
 
-    result += '<span id="page' + index.toString() + 'SortHandle" class="sort-handle left ui-icon ui-icon-arrowthick-2-n-s"></span>'
+    result += '<span id="menuItem' + index.toString() + 'SortHandle" class="sort-handle left ui-icon ui-icon-arrowthick-2-n-s"></span>'
 
-    result += '<button id="' + index.toString() + '" class="delete-page-button">Delete</button>'
+    result += '<button id="' + index.toString() + '" class="delete-menu-item-button">Delete</button>'
       
     result += '<label>\
         <span>Type</span>\
-        <select id="page' + index.toString() + 'Type" class="page-type">\
+        <select id="menuItem' + index.toString() + 'Type" class="menu-item-type">\
+          <option value="screen"' + ((type === 'screen') ? ' selected="selected"' : '') + '>Screen</option>\
           <option value="page"' + ((type === 'page') ? ' selected="selected"' : '') + '>Page</option>\
           <option value="iframe"' + ((type === 'iframe') ? ' selected="selected"' : '') + '>iFrame</option>\
           <option value="link"' + ((type === 'link') ? ' selected="selected"' : '') + '>External Link</option>\
@@ -238,20 +239,20 @@ function buildPageEntry(index, title, text, type) {
       </label>';
       
     result += '<label>\
-        <span id="page' + index.toString() + 'TitleLabel">' + ((type !== 'link') ? 'Page' : 'Link') + ' Title</span>\
-        <input type="text" id="page' + index.toString() + 'Title" class="page-title" value="' + title + '" />\
+        <span id="menuItem' + index.toString() + 'TitleLabel">' + ((type !== 'link' || type !== 'page') ? 'Screen' : 'Link') + ' Title</span>\
+        <input type="text" id="menuItem' + index.toString() + 'Title" class="menu-item-title" value="' + title + '" />\
       </label>';
 
-    result += '<div id="page' + index.toString() + 'TextContainer" style="display:' + ((type === 'page') ? 'block' : 'none') + ';">\
+    result += '<div id="menuItem' + index.toString() + 'TextContainer" style="display:' + ((type === 'screen') ? 'block' : 'none') + ';">\
         <label>\
-          <span>Page Text</span>\
+          <span>Screen Text</span>\
         </label>\
-        <textarea id="page' + index.toString() + 'Text" class="wysiwyg">' + text + '</textarea>\
+        <textarea id="menuItem' + index.toString() + 'Text" class="wysiwyg">' + text + '</textarea>\
       </div>';
 
-    result += '<label id="page' + index.toString() + 'URLContainer" class="full-width" style="display:' + ((type !== 'page') ? 'block' : 'none') + ';">\
+    result += '<label id="menuItem' + index.toString() + 'URLContainer" class="full-width" style="display:' + ((type !== 'screen') ? 'block' : 'none') + ';">\
         <span>Link URL</span>\
-        <input type="text" id="page' + index.toString() + 'URL" class="page-url" value="' + text + '" />\
+        <input type="text" id="menuItem' + index.toString() + 'URL" class="menu-item-url" value="' + text + '" />\
       </label>';
 
   // End of content-area
@@ -260,26 +261,26 @@ function buildPageEntry(index, title, text, type) {
   return result;
 }
 
-function addNewPage() {
-  var newPageIndex = nextPageIndex++;
+function addNewMenuItem() {
+  var newMenuIndex = nextMenuItemIndex++;
 
-  $('#pages').prepend(buildPageEntry(newPageIndex, 'New Page', 'New Page Content'));
+  $('#menuItems').prepend(buildMenuItemEntry(newMenuIndex, 'New Menu Item', 'New Menu Item Content'));
 
-  convertTextAreas('#page' + newPageIndex.toString() + 'Text');
+  convertTextAreas('#menuItem' + newMenuIndex.toString() + 'Text');
 
   // Add Listeners
-  $('#page #' + newPageIndex.toString()).click(function() {
-    deletePage(this.id);
+  $('#menuItem #' + newMenuIndex.toString()).click(function() {
+    deleteMenuItem(this.id);
   });
 
-  $('#page' + newPageIndex.toString() + 'Type').change(function() {
+  $('#menuItem' + newMenuIndex.toString() + 'Type').change(function() {
     toggleTypeForm(this);
   });
 }
 
-function deletePage(pageIndex) {
-  if (confirm('Do you really want to delete page "' + $('#page' + pageIndex + 'Title').val() + '"?\nIf you click "OK", it will be deleted forever, and there is no way to restore it!')) {
-    var idToDelete = 'page' + pageIndex;
+function deleteMenuItem(menuItemIndex) {
+  if (confirm('Do you really want to delete menu item "' + $('#menuItem' + menuItemIndex + 'Title').val() + '"?\nIf you click "OK", it will be deleted forever, and there is no way to restore it!')) {
+    var idToDelete = 'menuItem' + menuItemIndex;
 
     $('#' + idToDelete).remove();
   }
@@ -298,7 +299,7 @@ function buildNewsEntry(index, title, text, date) {
       </div>';
 
     result += '<label>\
-          <span>Show Text Entry for Page</span>\
+          <span>Show Text Entry for Screen</span>\
           <input id="news' + index.toString() + 'Checkbox" class="show-text-checkbox" type="checkbox"' + ((text !== '') ? ' checked="checked"' : '') + ' />\
         </label>';
 
@@ -401,7 +402,7 @@ function toggleTypeForm(element) {
       textareaId = element.id.replace('Type', 'TextContainer'),
       urlId = element.id.replace('Type', 'URLContainer');
 
-  if ($(element).val() === 'link') {
+  if ($(element).val() === 'link' || $(element).val() === 'page') {
     $('#' + titleLabelId).text('Link Title');
     $('#' + urlId).show();
     $('#' + textareaId).hide();
@@ -410,7 +411,7 @@ function toggleTypeForm(element) {
     $('#' + urlId).show();
     $('#' + textareaId).hide();
   } else {
-    $('#' + titleLabelId).text('Page Title');
+    $('#' + titleLabelId).text('Screen Title');
     $('#' + textareaId).show();
     $('#' + urlId).hide();
   }
@@ -437,27 +438,27 @@ function saveSiteData() {
       menuEntryStyles: $('#menuEntryStyles').val(),
       newsEntryStyles: $('#newsEntryStyles').val(),
       footerLinkStyles: $('#newsEntryStyles').val(),
-      pages: [],
+      menuItems: [],
       news: [],
       footer: []
     }
 
-    var pageEntries = $('#pages').children('.content-area');
+    var menuItemEntries = $('#menuItems').children('.content-area');
 
-    for (var i = 0; i < pageEntries.length; i++) {
-      var pageId = pageEntries[i].id;
-      var type = $('#' + pageId + 'Type').val();
+    for (var i = 0; i < menuItemEntries.length; i++) {
+      var menuItemId = menuItemEntries[i].id;
+      var type = $('#' + menuItemId + 'Type').val();
       var text;
 
-      if (type === 'page') {
-        text = escapeHtml($('#' + pageId + 'Text').tinymce().getContent());
+      if (type === 'screen') {
+        text = escapeHtml($('#' + menuItemId + 'Text').tinymce().getContent());
       } else {
-        text = escapeHtml($('#' + pageId + 'URL').val())
+        text = escapeHtml($('#' + menuItemId + 'URL').val())
       }
 
-      newSiteData.pages.push({
+      newSiteData.menuItems.push({
         type: type,
-        title: $('#' + pageId + 'Title').val(),
+        title: $('#' + menuItemId + 'Title').val(),
         text: text
       });
     }

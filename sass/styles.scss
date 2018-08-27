@@ -353,7 +353,7 @@ label.full-width {
   }
 }
 
-.page-url, .footer-text {
+.menu-item-url, .footer-text {
   width: 90%;
 }
 
@@ -361,7 +361,7 @@ label.full-width {
   @extend .right;
 }
 
-.delete-page-button, .delete-news-button, .delete-footer-button {
+.delete-menu-item-button, .delete-news-button, .delete-footer-button {
   @extend .delete-button;
 }
 
