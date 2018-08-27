@@ -1,4 +1,5 @@
 var nextMenuItemIndex = 0;
+var nextPageIndex = 0;
 var nextNewsIndex = 0;
 var nextFooterLinkIndex = 0;
 
@@ -30,6 +31,17 @@ $(document).ready(function() {
 
   // Get site data and process it.
   $.getJSON('sitedata.json?nocache=' + moment().valueOf().toString(), function(data) {
+    // Auto-update sitedata structure
+    if (!data.hasOwnProperty('menuItems')) {
+      data.menuItems = JSON.parse(JSON.stringify(data.pages));
+      data.pages = [];
+      $.post('savesitedata.php', { pw: window.adminpw, sitedata: JSON.stringify(data) }, function (data) {
+        if (data.indexOf('success') > -1) {
+          window.location.reload();
+        }
+      });
+    }
+
     var htmlContent = '<div class="content-container"><h2 class="content-title">General Site Data <span id="toggleGlobalContent" data-target="globalContent" class="toggle-button">collapse</span></h2>';
 
       htmlContent += '<div id="globalContent" class="content-area">';
@@ -96,6 +108,21 @@ $(document).ready(function() {
     htmlContent += '</div>\
     </div>';
 
+    htmlContent += '<div class="content-container"><h2 class="content-title">Pages <span id="togglePages" data-target="pages" class="toggle-button">collapse</span></h2>';
+
+      htmlContent += '<button id="newPageButton">Add Page</button>';
+
+      htmlContent += '<div id="pages">';
+
+    for (var p = 0; p < data.pages.length; p++) {
+      htmlContent += buildPageEntry(p, data.pages[p].title, data.pages[p].path, data.pages[p].content);
+      nextPageIndex++;
+    }
+
+    // End of pages
+    htmlContent += '</div>\
+    </div>';
+
     htmlContent += '<div class="content-container"><h2 class="content-title">News <span id="toggleNews" data-target="news" class="toggle-button">collapse</span></h2>';
 
       htmlContent += '<button id="newNewsButton">Add News</button>';
@@ -141,12 +168,16 @@ $(document).ready(function() {
       $('#notifications').hide();
     });
 
-    $('#toggleGlobalContent, #toggleMenuItems, #toggleNews, #toggleFooter').click(function() {
+    $('#toggleGlobalContent, #toggleMenuItems, #togglePages, #toggleNews, #toggleFooter').click(function() {
       toggleSectionVisibility(this, '#' + $(this).attr('data-target'));
     });
 
     $('#newMenuItemButton').click(function() {
       addNewMenuItem();
+    });
+
+    $('#newPageButton').click(function() {
+      addNewPage();
     });
 
     $('#newNewsButton').click(function() {
@@ -163,6 +194,10 @@ $(document).ready(function() {
 
     $('.delete-menu-item-button').click(function() {
       deleteMenuItem(this.id);
+    });
+
+    $('.delete-page-button').click(function() {
+      deletePage(this.id);
     });
 
     $('.delete-news-button').click(function() {
@@ -281,6 +316,62 @@ function addNewMenuItem() {
 function deleteMenuItem(menuItemIndex) {
   if (confirm('Do you really want to delete menu item "' + $('#menuItem' + menuItemIndex + 'Title').val() + '"?\nIf you click "OK", it will be deleted forever, and there is no way to restore it!')) {
     var idToDelete = 'menuItem' + menuItemIndex;
+
+    $('#' + idToDelete).remove();
+  }
+}
+
+function buildPageEntry(index, title, path, content) {
+  var result = '<div id="page' + index.toString() + '" class="content-area">';
+
+  result += '<span id="page' + index.toString() + 'SortHandle" class="sort-handle left ui-icon ui-icon-arrowthick-2-n-s"></span>'
+
+  result += '<button id="' + index.toString() + '" class="delete-page-button">Delete</button>'
+
+  result += '<label>\
+        <span id="page' + index.toString() + 'TitleLabel">Page Title</span><br />\
+        <input type="text" id="page' + index.toString() + 'Title" class="page-title" value="' + title + '" />\
+      </label>';
+
+  result += '<label>\
+        <span id="page' + index.toString() + 'PathLabel">Page Path</span><br />\
+        <em>(i.e. example.com/page-path) - Must be unique!</em>\
+        <input type="text" id="page' + index.toString() + 'Path" class="page-path" value="' + path + '" />\
+      </label>';
+
+  result += '<div id="page' + index.toString() + 'ContentContainer">\
+        <label>\
+          <span>Page Content</span>\
+        </label>\
+        <textarea id="page' + index.toString() + 'Content" class="wysiwyg">' + content + '</textarea>\
+      </div>';
+
+  // End of content-area
+  result += '</div>';
+
+  return result;
+}
+
+function addNewPage() {
+  var newPageIndex = nextPageIndex++;
+
+  $('#pages').prepend(buildPageEntry(newPageIndex, 'New Page', 'new-page', 'New Page Content'));
+
+  convertTextAreas('#page' + newPageIndex.toString() + 'Content');
+
+  // Add Listeners
+  $('#page #' + newPageIndex.toString()).click(function () {
+    deletePage(this.id);
+  });
+
+  $('#page' + newPageIndex.toString() + 'Type').change(function () {
+    toggleTypeForm(this);
+  });
+}
+
+function deletePage(pageIndex) {
+  if (confirm('Do you really want to delete menu item "' + $('#page' + pageIndex + 'Title').val() + '"?\nIf you click "OK", it will be deleted forever, and there is no way to restore it!')) {
+    var idToDelete = 'page' + pageIndex;
 
     $('#' + idToDelete).remove();
   }
@@ -439,6 +530,7 @@ function saveSiteData() {
       newsEntryStyles: $('#newsEntryStyles').val(),
       footerLinkStyles: $('#newsEntryStyles').val(),
       menuItems: [],
+      pages: [],
       news: [],
       footer: []
     }
@@ -460,6 +552,19 @@ function saveSiteData() {
         type: type,
         title: $('#' + menuItemId + 'Title').val(),
         text: text
+      });
+    }
+
+    var pageEntries = $('#pages').children('.content-area');
+
+    for (var i = 0; i < pageEntries.length; i++) {
+      var pageId = pageEntries[i].id;
+      var content = escapeHtml($('#' + pageId + 'Content').tinymce().getContent());
+
+      newSiteData.pages.push({
+        title: $('#' + pageId + 'Title').val(),
+        path: $('#' + pageId + 'Path').val(),
+        content: content
       });
     }
 
@@ -493,11 +598,6 @@ function saveSiteData() {
     // Sort the news by date, descending.
     newSiteData.news.sort(dynamicSort(['-published']));
 
-    // Debug for no PHP server
-    // console.log(JSON.stringify(newSiteData));
-    // showNotification('Check the console!');
-
-    // Uncomment below once on PHP server.
     $.post('savesitedata.php', {pw: window.adminpw, sitedata: JSON.stringify(newSiteData)}, function (data) {
       var linkToPage = ((data.indexOf('success') > -1) ? '<br /><a href="./" target="_blank">Go to Site</a>' : '');
 
