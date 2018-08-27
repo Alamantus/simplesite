@@ -34,7 +34,7 @@ $(document).ready(function() {
     // Auto-update sitedata structure
     if (!data.hasOwnProperty('menuItems')) {
       data.menuItems = JSON.parse(JSON.stringify(data.pages));
-      data.pages = [];
+      data.pages = {};
       $.post('savesitedata.php', { pw: window.adminpw, sitedata: JSON.stringify(data) }, function (data) {
         if (data.indexOf('success') > -1) {
           window.location.reload();
@@ -114,8 +114,9 @@ $(document).ready(function() {
 
       htmlContent += '<div id="pages">';
 
-    for (var p = 0; p < data.pages.length; p++) {
-      htmlContent += buildPageEntry(p, data.pages[p].title, data.pages[p].path, data.pages[p].content);
+    // for (var p = 0; p < data.pages.length; p++) {
+    for (var path in data.pages) {
+      htmlContent += buildPageEntry(p, data.pages[path].title, path, data.pages[path].content);
       nextPageIndex++;
     }
 
@@ -329,14 +330,15 @@ function buildPageEntry(index, title, path, content) {
   result += '<button id="' + index.toString() + '" class="delete-page-button">Delete</button>'
 
   result += '<label>\
-        <span id="page' + index.toString() + 'TitleLabel">Page Title</span><br />\
+        <span id="page' + index.toString() + 'TitleLabel">Page Title</span>\
         <input type="text" id="page' + index.toString() + 'Title" class="page-title" value="' + title + '" />\
       </label>';
 
-  result += '<label>\
-        <span id="page' + index.toString() + 'PathLabel">Page Path</span><br />\
-        <em>(i.e. example.com/page-path) - Must be unique!</em>\
+  result += '<label class="full-width">\
+        <span id="page' + index.toString() + 'PathLabel">Page Path</span>\
+        <small><em>Must be unique and contain only letters, numbers, dashes, or underscores (no spaces or other special characters)!</em></small>\
         <input type="text" id="page' + index.toString() + 'Path" class="page-path" value="' + path + '" />\
+        <small><em>Accessed via ' + window.location.href.substring(0, window.location.href.indexOf('admin.php')) + 'your-page-path</em></small>\
       </label>';
 
   result += '<div id="page' + index.toString() + 'ContentContainer">\
@@ -530,7 +532,7 @@ function saveSiteData() {
       newsEntryStyles: $('#newsEntryStyles').val(),
       footerLinkStyles: $('#newsEntryStyles').val(),
       menuItems: [],
-      pages: [],
+      pages: {},
       news: [],
       footer: []
     }
@@ -559,13 +561,13 @@ function saveSiteData() {
 
     for (var i = 0; i < pageEntries.length; i++) {
       var pageId = pageEntries[i].id;
+      var path = $('#' + pageId + 'Path').val();
       var content = escapeHtml($('#' + pageId + 'Content').tinymce().getContent());
 
-      newSiteData.pages.push({
+      newSiteData.pages[path] = {
         title: $('#' + pageId + 'Title').val(),
-        path: $('#' + pageId + 'Path').val(),
         content: content
-      });
+      };
     }
 
     var newsEntries = $('#news').children('.content-area');
